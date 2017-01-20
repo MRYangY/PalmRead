@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.yangyu.palmread.Base.BaseFragment;
+import com.example.yangyu.palmread.Constant.ProjectContent;
 import com.example.yangyu.palmread.R;
 
 /**
@@ -80,7 +81,7 @@ public class HomeCollectionFragment extends BaseFragment {
             HomeFragment fragment = new HomeFragment();
             String index = mTabIndex[position];
             Bundle bundle = new Bundle();
-            bundle.putString("TabIndex", index);
+            bundle.putString(ProjectContent.EXTRA_TAB_INDEX, index);
             fragment.setArguments(bundle);
             return fragment;
         }

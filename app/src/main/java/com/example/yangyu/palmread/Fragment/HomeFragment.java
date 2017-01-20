@@ -1,32 +1,44 @@
 package com.example.yangyu.palmread.Fragment;
 
-import android.content.Context;
-import android.content.res.TypedArray;
-import android.graphics.Canvas;
-import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.yangyu.palmread.Activity.HomePageDetailActivity;
 import com.example.yangyu.palmread.Base.BaseFragment;
+import com.example.yangyu.palmread.Constant.ProjectContent;
 import com.example.yangyu.palmread.Logic.HomeCollectionLogic;
+import com.example.yangyu.palmread.Logic.HomeJsonToResult;
+import com.example.yangyu.palmread.Logic.WebCache;
+import com.example.yangyu.palmread.Models.GetHomePageresult;
 import com.example.yangyu.palmread.R;
+import com.example.yangyu.palmread.Util.ToastUtils;
 import com.example.yangyu.palmread.Util.UrlParseUtils;
+import com.example.yangyu.palmread.View.MyItemDecoration;
+import com.facebook.drawee.view.SimpleDraweeView;
+
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 /**
  * Created by yangyu on 2017/1/9.
  */
 
-public class HomeFragment extends BaseFragment {
+public class HomeFragment extends BaseFragment implements Callback,SwipeRefreshLayout.OnRefreshListener {
     public static final String TAG = HomeFragment.class.getCanonicalName();
     private View mLayout;
     private SwipeRefreshLayout mRefresh;
@@ -35,12 +47,37 @@ public class HomeFragment extends BaseFragment {
     private MyItemDecoration mDecoration;
     private String mUrl;
     private String mResult;
+    private GetHomePageresult mHomePageresult;
+    private GetHomePageresult.PageData[] mPageData;
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            int what = msg.what;
+            switch(what) {
+                case 0:
+                    ToastUtils.TipToast(getActivity(), "网络错误，请检查您的网络");
+                    break;
+                case 1:
+                    mRefresh.setRefreshing(false);
+                    mAdapter.notifyDataSetChanged();
+                    break;
+                case 3:
+                    mPageData=((GetHomePageresult) msg.obj).mResult.mData;
+                    mAdapter.notifyDataSetChanged();
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+    private String mTab;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        mLayout = inflater.inflate(R.layout.fragmnet_home,container,false);
+        mLayout = inflater.inflate(R.layout.fragmnet_home, container, false);
         return mLayout;
     }
 
@@ -48,22 +85,16 @@ public class HomeFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Bundle arguments = getArguments();
-        String mTab=arguments.getString("TabIndex");
-        Toast.makeText(getActivity(),mTab,Toast.LENGTH_SHORT).show();
+        mTab = arguments.getString(ProjectContent.EXTRA_TAB_INDEX);
         mUrl = UrlParseUtils.onStringParseUrl(mTab);
-        getData();
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
+        HomeCollectionLogic.getNetData(mUrl, this, mTab,mHandler);
+        mRefresh.setColorSchemeResources(android.R.color.holo_blue_bright,android.R.color.holo_green_light);
+        mRefresh.setOnRefreshListener(this);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         mRecyclerView.addItemDecoration(mDecoration);
         mRecyclerView.setAdapter(mAdapter);
     }
-    private void getData(){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                mResult = HomeCollectionLogic.getNetData(mUrl);
-            }
-        }).start();
-    }
+
     @Override
     protected void initView() {
         mRefresh = (SwipeRefreshLayout)mLayout.findViewById(R.id.swipe);
@@ -75,14 +106,39 @@ public class HomeFragment extends BaseFragment {
         mAdapter = new MyAdapter();
         mAdapter.setmOnRecyclerViewItemClick(new OnRecyclerViewItemClick() {
             @Override
-            public void onItemClick(View v) {
-                Toast.makeText(getActivity(),"Item Click",Toast.LENGTH_LONG).show();
+            public void onItemClick(View v,GetHomePageresult.PageData data) {
+//                Toast.makeText(getActivity(), "Item Click", Toast.LENGTH_LONG).show();
+                Intent intent=new Intent(getActivity(), HomePageDetailActivity.class);
+                intent.putExtra(ProjectContent.EXTRA_HOME_FRAGMENT_RESULT,data);
+                startActivity(intent);
             }
         });
         mDecoration = new MyItemDecoration(getActivity());
     }
 
-    private class MyAdapter extends RecyclerView.Adapter<MyHolder>{
+    @Override
+    public void onFailure(Call call, IOException e) {
+        mHandler.sendEmptyMessage(0);
+        mRefresh.setRefreshing(false);
+        e.printStackTrace();
+    }
+
+    @Override
+    public void onResponse(Call call, Response response) throws IOException {
+        mHomePageresult = HomeJsonToResult.HomePageParse(GetHomePageresult.class, response.body().string());
+        WebCache.saveMemoryCache(mTab,mHomePageresult);
+        mPageData = mHomePageresult != null ? mHomePageresult.mResult.mData : new GetHomePageresult.PageData[0];
+        mHandler.sendEmptyMessage(1);
+    }
+
+    @Override
+    public void onRefresh() {
+        mRefresh.setRefreshing(true);
+        WebCache.resetMemory(mTab);
+        HomeCollectionLogic.getNetData(mUrl, this,mTab,mHandler);
+    }
+
+    private class MyAdapter extends RecyclerView.Adapter<MyHolder> {
         private OnRecyclerViewItemClick mOnRecyclerViewItemClick;
 
         void setmOnRecyclerViewItemClick(OnRecyclerViewItemClick mOnRecyclerViewItemClick) {
@@ -91,13 +147,13 @@ public class HomeFragment extends BaseFragment {
 
         @Override
         public MyHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view=LayoutInflater.from(getActivity())
-                    .inflate(R.layout.item_home,parent,false);
+            View view = LayoutInflater.from(getActivity())
+                    .inflate(R.layout.item_home, parent, false);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(mOnRecyclerViewItemClick!=null){
-                        mOnRecyclerViewItemClick.onItemClick(v);
+                    if(mOnRecyclerViewItemClick != null) {
+                        mOnRecyclerViewItemClick.onItemClick(v,(GetHomePageresult.PageData)v.getTag());
                     }
                 }
             });
@@ -106,31 +162,102 @@ public class HomeFragment extends BaseFragment {
 
         @Override
         public void onBindViewHolder(MyHolder holder, int position) {
-
+            if(mPageData!=null){
+                GetHomePageresult.PageData data=mPageData[position];
+                int num=showPic(data);
+                switch(num){
+                    case 0:
+                        holder.mNewPhoto1.setVisibility(View.GONE);
+                        holder.mNewPhoto2.setVisibility(View.GONE);
+                        holder.mNewPhoto3.setVisibility(View.GONE);
+                        break;
+                    case 1:
+                        holder.mNewPhoto1.setVisibility(View.VISIBLE);
+                        holder.mNewPhoto2.setVisibility(View.GONE);
+                        holder.mNewPhoto3.setVisibility(View.GONE);
+                        ViewGroup.LayoutParams params= holder.mNewPhoto1.getLayoutParams();
+                        DisplayMetrics metric = new DisplayMetrics();
+                        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);
+                        int width = metric.widthPixels;
+                        params.height=width*2/4;
+                        holder.mNewPhoto1.setLayoutParams(params);
+                        holder.mNewPhoto1.setImageURI(data.mPicOne);
+                        break;
+                    case 2:
+                        holder.mNewPhoto1.setVisibility(View.VISIBLE);
+                        holder.mNewPhoto2.setVisibility(View.VISIBLE);
+                        holder.mNewPhoto3.setVisibility(View.GONE);
+                        ViewGroup.LayoutParams params1= holder.mNewPhoto1.getLayoutParams();
+                        ViewGroup.LayoutParams paramsPhotoCase2= holder.mNewPhoto2.getLayoutParams();
+                        params1.height=paramsPhotoCase2.height;
+                        holder.mNewPhoto1.setLayoutParams(params1);
+                        holder.mNewPhoto1.setImageURI(data.mPicOne);
+                        holder.mNewPhoto2.setImageURI(data.mPicTwo);
+                        break;
+                    case 3:
+                        holder.mNewPhoto1.setVisibility(View.VISIBLE);
+                        holder.mNewPhoto2.setVisibility(View.VISIBLE);
+                        holder.mNewPhoto3.setVisibility(View.VISIBLE);
+                        ViewGroup.LayoutParams params2= holder.mNewPhoto1.getLayoutParams();
+                        ViewGroup.LayoutParams paramsPhotoCase3= holder.mNewPhoto2.getLayoutParams();
+                        params2.height=paramsPhotoCase3.height;
+                        holder.mNewPhoto1.setLayoutParams(params2);
+                        holder.mNewPhoto1.setImageURI(data.mPicOne);
+                        holder.mNewPhoto2.setImageURI(data.mPicTwo);
+                        holder.mNewPhoto3.setImageURI(data.mPicThree);
+                        break;
+                }
+                holder.mNewTitle.setText(data.mTitle);
+                holder.mNewTime.setText(data.mData);
+                holder.mNewEditor.setText(data.mAutorName);
+                holder.itemView.setTag(data);
+            }
         }
 
         @Override
         public int getItemCount() {
-            return 10;
+            return mPageData == null ? 1 : mPageData.length;
         }
 
-
-
     }
-    public interface OnRecyclerViewItemClick{
-        void onItemClick(View v);
+
+    private int showPic(GetHomePageresult.PageData data){
+        int count=0;
+        if(!TextUtils.isEmpty(data.mPicOne)){
+            count=1;
+        }else {
+            return count;
+        }
+        if(!TextUtils.isEmpty(data.mPicTwo)){
+            count=2;
+        }else {
+            return count;
+        }
+        if(!TextUtils.isEmpty(data.mPicThree)){
+            count=3;
+        }else {
+            return count;
+        }
+        return count;
+    }
+    public interface OnRecyclerViewItemClick {
+        void onItemClick(View v,GetHomePageresult.PageData modelData);
     }
 
     private class MyHolder extends RecyclerView.ViewHolder {
 
-        private  ImageView mNewPhoto;
-        private  TextView mNewTitle;
-        private  TextView mNewTime;
-        private  TextView mNewEditor;
+        private SimpleDraweeView mNewPhoto1;
+        private SimpleDraweeView mNewPhoto2;
+        private SimpleDraweeView mNewPhoto3;
+        private TextView mNewTitle;
+        private TextView mNewTime;
+        private TextView mNewEditor;
 
-        public MyHolder(View itemView) {
+        MyHolder(View itemView) {
             super(itemView);
-            mNewPhoto = (ImageView) itemView.findViewById(R.id.new_photo);
+            mNewPhoto1 = (SimpleDraweeView)itemView.findViewById(R.id.new_photo1);
+            mNewPhoto2 = (SimpleDraweeView)itemView.findViewById(R.id.new_photo2);
+            mNewPhoto3 = (SimpleDraweeView)itemView.findViewById(R.id.new_photo3);
             mNewTitle = (TextView)itemView.findViewById(R.id.new_title);
             mNewTime = (TextView)itemView.findViewById(R.id.new_time);
             mNewEditor = (TextView)itemView.findViewById(R.id.new_editor);
@@ -138,40 +265,5 @@ public class HomeFragment extends BaseFragment {
 
     }
 
-    private class MyItemDecoration extends RecyclerView.ItemDecoration{
-        private  int[] ATTRS=new int[]{
-                android.R.attr.listDivider
-        };
-        private Drawable mDrawable;
 
-        MyItemDecoration(Context context) {
-            final TypedArray array=context.obtainStyledAttributes(ATTRS);
-            mDrawable=array.getDrawable(0);
-            array.recycle();
-        }
-
-        @Override
-        public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-            super.onDraw(c, parent, state);
-            final int left = parent.getPaddingLeft();
-            final int right = parent.getWidth() - parent.getPaddingRight();
-
-            final int childCount = parent.getChildCount();
-            for (int i = 0; i < childCount; i++) {
-                final View child = parent.getChildAt(i);
-                final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child
-                        .getLayoutParams();
-                final int top = child.getBottom() + params.bottomMargin;
-                final int bottom = top + mDrawable.getIntrinsicHeight();
-                mDrawable.setBounds(left, top, right, bottom);
-                mDrawable.draw(c);
-            }
-        }
-
-        @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-            super.getItemOffsets(outRect, view, parent, state);
-            outRect.set(0, 0, 0, mDrawable.getIntrinsicHeight());
-        }
-    }
 }

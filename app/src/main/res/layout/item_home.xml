@@ -1,28 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="8dp"
     android:layout_gravity="center_vertical"
+    android:orientation="vertical"
+    android:padding="8dp"
     >
-
-    <ImageView
-        android:id="@+id/new_photo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@mipmap/ic_launcher"/>
 
     <TextView
         android:id="@+id/new_title"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="150dp"
+        android:ellipsize="end"
         android:maxLines="3"
         android:text="er"
         android:textColor="#000000"
-        android:textSize="23sp"/>
+        android:textSize="18sp"/>
+
+    <LinearLayout
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/new_photo1"
+            android:layout_width="0dp"
+            android:layout_height="90dp"
+            android:layout_weight="1"
+            fresco:placeholderImage="@mipmap/ic_launcher"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="4dp"/>
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/new_photo2"
+            android:layout_width="0dp"
+            android:layout_height="90dp"
+            android:layout_weight="1"
+            fresco:placeholderImage="@mipmap/ic_launcher"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            />
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/new_photo3"
+            android:layout_width="0dp"
+            android:layout_height="90dp"
+            android:layout_weight="1"
+            fresco:placeholderImage="@mipmap/ic_launcher"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="5dp"/>
+    </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -33,19 +64,21 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/new_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="11.00"
-            android:textSize="14sp"
-            android:layout_marginRight="10dp"/>
-
-        <TextView
             android:id="@+id/new_editor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="环球网"
-            android:textSize="14sp"/>
+            android:textSize="13sp"/>
+
+        <TextView
+            android:id="@+id/new_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:text="11.00"
+            android:textSize="13sp"/>
+
+
     </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>

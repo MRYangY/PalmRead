@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="5dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="230dp">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/video_cover_pic"
+            android:layout_width="match_parent"
+            android:layout_height="230dp"
+            android:visibility="visible"
+            fresco:placeholderImage="@mipmap/ic_launcher"/>
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/play_pause"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
+            fresco:placeholderImage="@drawable/ic_play_video_white_24dp"
+            android:visibility="visible"
+            />
+
+        <TextView
+            android:id="@+id/video_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:padding="8dp"
+            android:text="这酸爽才够味"
+            android:textColor="#fff"/>
+
+
+        <TextView
+            android:id="@+id/play_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:padding="5dp"
+            android:text="1000"
+            android:textColor="#fff"
+            android:textSize="12sp"/>
+    </RelativeLayout>
+
+    <com.example.yangyu.palmread.View.VideoItemBottom
+        android:id="@+id/vib"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        />
+</LinearLayout>

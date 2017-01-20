@@ -13,6 +13,8 @@ import com.example.yangyu.palmread.Fragment.PersonFragment;
 import com.example.yangyu.palmread.Fragment.VideoFragment;
 import com.example.yangyu.palmread.R;
 
+import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
+
 
 /**
  * Created by yangyu on 2017/1/9.
@@ -84,5 +86,18 @@ public class HomePageActivity extends AppCompatActivity implements BottomNavigat
     @Override
     public void onTabReselected(int position) {
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (JCVideoPlayer.backPress()) {
+            return;
+        }
+        super.onBackPressed();
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        JCVideoPlayer.releaseAllVideos();
     }
 }

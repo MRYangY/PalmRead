@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/user_photo"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        fresco:placeholderImage="@mipmap/ic_launcher"
+        android:padding="5dp"
+        android:paddingLeft="5dp"
+        />
+
+    <TextView
+        android:id="@+id/user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/user_photo"
+        android:paddingLeft="5dp"
+        android:paddingTop="10dp"
+        android:gravity="center_vertical"
+        android:text="黑男"
+        android:textSize="13sp"
+        />
+
+    <ImageView
+        android:id="@+id/tool"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:padding="5dp"
+        android:src="@drawable/ic_video_tool_24dp"/>
+
+    <TextView
+        android:id="@+id/comments_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/tool"
+        android:drawableLeft="@drawable/ic_comment_black_24dp"
+        android:gravity="center"
+        android:padding="5dp"
+        android:text="300"
+        android:textSize="10sp"/>
+
+    <TextView
+        android:id="@+id/like_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/comments_count"
+        android:drawableLeft="@drawable/ic_favorite_black_24dp"
+        android:gravity="center"
+        android:padding="5dp"
+        android:text="1200"
+        android:textSize="10sp"/>
+
+
+</RelativeLayout>

@@ -2,6 +2,10 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <!--padding-->
+    <dimen name="PaddingLittle">2dp</dimen>
+    <dimen name="PaddingMiddle">8dp</dimen>
+    <dimen name="PaddingLarge">15dp</dimen>
 
     <!--控件sp-->
     <dimen name="tablayout_size">18sp</dimen>
