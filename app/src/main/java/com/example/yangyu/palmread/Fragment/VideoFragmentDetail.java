@@ -28,6 +28,7 @@ import com.example.yangyu.palmread.View.VideoItemBottom;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Call;
@@ -38,34 +39,41 @@ import okhttp3.Response;
  * Created by yangyu on 2017/1/18.
  */
 
-public class VideoFragmentDetail extends BaseFragment implements Callback{
+public class VideoFragmentDetail extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private View mLayout;
     private SwipeRefreshLayout mRefreshLayout;
     private RecyclerView mContentView;
     private VideoDetailAdapter mAdapter;
+    private LinearLayoutManager mLinearLayoutManager;
+    private ReadVideoCallBack mCallBack;
+
     private MyItemDecoration mItemDecoration;
-
-    private GetVideoResult mGetVideoResult;
+    //    private GetVideoResult mGetVideoResult;
     private List<GetVideoResult> mVideoData;
+    private List<GetVideoResult> mVideoDataTotal;
     private int mVideoIndex;
-    private int default_page=1;
-//    private boolean isShow=true;
 
-    private Handler mHandler=new Handler(){
+    private int default_page = 1;
+    private String videoDetailUrl;
+    private boolean hasNet = true;
+    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch(msg.what){
+            switch(msg.what) {
                 case 00:
-                    ToastUtils.TipToast(getActivity(),"短视频获取网络错误！！");
-                break;
+                    mRefreshLayout.setRefreshing(false);
+                    ToastUtils.TipToast(getActivity(), "短视频获取网络错误！！");
+                    mAdapter.notifyDataSetChanged();
+                    break;
                 case 01:
+                    mRefreshLayout.setRefreshing(false);
                     mAdapter.notifyDataSetChanged();
                     break;
                 case 02:
-                    Intent intent=new Intent(getActivity(), VideoPlayActivity.class);
-                    intent.putExtra(ProjectContent.EXTRA_VIDEO_PLAY_URL,(String)msg.obj);
+                    Intent intent = new Intent(getActivity(), VideoPlayActivity.class);
+                    intent.putExtra(ProjectContent.EXTRA_VIDEO_PLAY_URL, (String)msg.obj);
                     startActivity(intent);
                     break;
                 default:
@@ -73,10 +81,11 @@ public class VideoFragmentDetail extends BaseFragment implements Callback{
             }
         }
     };
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mLayout = inflater.inflate(R.layout.fragment_video_detail,container,false);
+        mLayout = inflater.inflate(R.layout.fragment_video_detail, container, false);
         return mLayout;
     }
 
@@ -85,11 +94,92 @@ public class VideoFragmentDetail extends BaseFragment implements Callback{
         super.onActivityCreated(savedInstanceState);
         Bundle arguments = getArguments();
         mVideoIndex = arguments.getInt(ProjectContent.EXTRA_VIDEO_INDEX);
-        String videoDetailUrl = UrlParseUtils.getVideoDetailUrlPage(mVideoIndex,default_page);
-        VideoLogic.getVideoNoPage(videoDetailUrl,this);
-        mContentView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
+        videoDetailUrl = UrlParseUtils.getVideoDetailUrlPage(mVideoIndex, default_page);
+        VideoLogic.getVideoNoPage(videoDetailUrl, mCallBack);
+        mLinearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        mRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright, android.R.color.holo_green_light);
+        mRefreshLayout.setRefreshing(true);
+        mRefreshLayout.setOnRefreshListener(this);
+        mContentView.setLayoutManager(mLinearLayoutManager);
         mContentView.addItemDecoration(mItemDecoration);
         mContentView.setAdapter(mAdapter);
+        mContentView.addOnScrollListener(new EndLessOnScrollListener(mLinearLayoutManager) {
+            @Override
+            public void onLoadMore(int currentPage) {
+                LoadMoreData(currentPage);
+            }
+        });
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(mVideoDataTotal!=null)
+        mVideoDataTotal.clear();
+    }
+
+    private void LoadMoreData(int currentPage) {
+        String moreUrl = UrlParseUtils.getVideoDetailUrlPage(mVideoIndex, currentPage);
+        VideoLogic.getVideoNoPage(moreUrl, mCallBack);
+    }
+
+    public abstract class EndLessOnScrollListener extends RecyclerView.OnScrollListener {
+
+        //声明一个LinearLayoutManager
+        private LinearLayoutManager mLinearLayoutManager;
+
+        //当前页，从0开始    private int currentPage = 0;
+        //已经加载出来的Item的数量
+        private int totalItemCount;
+
+        //主要用来存储上一个totalItemCount
+//        private int previousTotal = 0;
+
+        //在屏幕上可见的item数量
+//        private int visibleItemCount;
+
+        //在屏幕可见的Item中的第一个
+//        private int firstVisibleItem;
+        private int lastVisibleItem;
+        //是否正在上拉数据
+//        private boolean loading = true;
+
+        EndLessOnScrollListener(LinearLayoutManager linearLayoutManager) {
+            this.mLinearLayoutManager = linearLayoutManager;
+        }
+
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+//            visibleItemCount = recyclerView.getChildCount();
+            totalItemCount = mLinearLayoutManager.getItemCount();
+//            firstVisibleItem = mLinearLayoutManager.findFirstVisibleItemPosition();
+            lastVisibleItem = mLinearLayoutManager.findLastVisibleItemPosition();
+
+//            Log.e("Test","firstVisibleItem: " +firstVisibleItem);
+//            Log.e("Test", "lastVisibleItem:" + lastVisibleItem);
+//            Log.e("Test","totalPageCount:" +totalItemCount);
+//            Log.e("Test", "visibleItemCount:" + visibleItemCount);
+//            Log.e("Test", "dx:" + dx);
+//            Log.e("Test", "dy:" + dy);
+
+
+        }
+
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            super.onScrollStateChanged(recyclerView, newState);
+            if(totalItemCount - 1 == lastVisibleItem && newState == RecyclerView.SCROLL_STATE_IDLE) {
+                default_page++;
+                onLoadMore(default_page);
+            }
+        }
+
+        /**
+         * 提供一个抽闲方法，在Activity中监听到这个EndLessOnScrollListener
+         * 并且实现这个方法
+         */
+        public abstract void onLoadMore(int currentPage);
     }
 
     @Override
@@ -100,72 +190,139 @@ public class VideoFragmentDetail extends BaseFragment implements Callback{
 
     @Override
     protected void initData() {
-        mAdapter = new VideoDetailAdapter();
+        mCallBack = new ReadVideoCallBack();
+//        mVideoDataTotal = new ArrayList<>();
+        mAdapter = new VideoDetailAdapter() {
+            @Override
+            public void reGetData() {
+                VideoLogic.getVideoNoPage(videoDetailUrl, mCallBack);
+            }
+        };
         mItemDecoration = new MyItemDecoration(getActivity());
     }
 
-    @Override
-    public void onFailure(Call call, IOException e) {
-        e.printStackTrace();
-        mHandler.sendEmptyMessage(00);
-    }
+    private class ReadVideoCallBack implements Callback {
 
-    @Override
-    public void onResponse(Call call, Response response) throws IOException {
-        mVideoData=HomeJsonToResult.VideoResultParse(GetVideoResult.class
-                ,response.body().string());
-        mHandler.sendEmptyMessage(01);
-    }
-
-    private class VideoDetailAdapter extends RecyclerView.Adapter<VideoHolder>{
-        private VideoHolder mHolder;
-
-        public VideoHolder getVideoHolder(){
-            return mHolder;
+        @Override
+        public void onFailure(Call call, IOException e) {
+            e.printStackTrace();
+            hasNet = false;
+            mHandler.sendEmptyMessage(00);
         }
+
+        @Override
+        public void onResponse(Call call, Response response) throws IOException {
+            hasNet = true;
+            mVideoData = HomeJsonToResult.VideoResultParse(GetVideoResult.class
+                    , response.body().string());
+            if(mVideoDataTotal==null){
+                mVideoDataTotal=new ArrayList<>();
+            }
+            mVideoDataTotal.addAll(mVideoData);
+            mHandler.sendEmptyMessage(01);
+        }
+
+    }
+
+    @Override
+    public void onRefresh() {
+        mRefreshLayout.setRefreshing(true);
+        VideoLogic.getVideoNoPage(videoDetailUrl, mCallBack);
+    }
+
+    private abstract class VideoDetailAdapter extends RecyclerView.Adapter<VideoHolder> {
         @Override
         public VideoHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view=LayoutInflater.from(getActivity()).inflate(R.layout.item_video_detail,parent,false);
-            mHolder=new VideoHolder(view);
-            return new VideoHolder(view);
+            switch(viewType) {
+                case 111:
+                    View view_more = LayoutInflater.from(getActivity())
+                            .inflate(R.layout.item_loading, parent, false);
+
+                    return new VideoHolder(view_more, 111);
+
+                case 112:
+                    View view_error = LayoutInflater.from(getActivity())
+                            .inflate(R.layout.item_error, parent, false);
+
+                    return new VideoHolder(view_error, 112);
+
+                case 113:
+                    View view_normal = LayoutInflater.from(getActivity())
+                            .inflate(R.layout.item_video_detail, parent, false);
+
+                    return new VideoHolder(view_normal, 113);
+            }
+            View view = LayoutInflater.from(getActivity()).inflate(R.layout.item_video_detail, parent, false);
+
+            return new VideoHolder(view, 113);
         }
 
         @Override
         public void onBindViewHolder(VideoHolder holder, int position) {
-            if(mVideoData!=null){
-                GetVideoResult result = mVideoData.get(position);
-                holder.mCoverPic.setImageURI(result.getCover_pic());
-                holder.mDescription.setText(result.getCaption());
-                holder.mPlayCount.setText(result.getPlays_count()+"");
-                holder.mVib.mUserPhoto.setImageURI(result.getAvatar());
-                holder.mVib.mUserName.setText(result.getScreen_name());
-                holder.mVib.mLikeCount.setText(result.getLikes_count()+"");
-                holder.mVib.mCommentsCount.setText(result.getComments_count()+"");
-                holder.mVib.mLikeCount.setTag(result);
-                holder.mVib.mCommentsCount.setTag(result);
-                holder.mPlayPause.setTag(result);
-                holder.mPlayPause.setOnClickListener(mPlayPauseListener);
+            int type = getItemViewType(position);
+            switch(type) {
+                case 111:
+                    holder.mFootView.setText("正在加载中...");
+                    break;
+                case 112:
+                    if(holder.mNetError!=null)
+                    holder.mNetError.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            reGetData();
+                        }
+                    });
+                    break;
+                case 113:
+                    if(mVideoDataTotal != null) {
+                        GetVideoResult result = mVideoDataTotal.get(position);
+                        holder.mCoverPic.setImageURI(result.getCover_pic());
+                        holder.mDescription.setText(result.getCaption());
+                        holder.mPlayCount.setText(result.getPlays_count() + "");
+                        holder.mVib.mUserPhoto.setImageURI(result.getAvatar());
+                        holder.mVib.mUserName.setText(result.getScreen_name());
+                        holder.mVib.mLikeCount.setText(result.getLikes_count() + "");
+                        holder.mVib.mCommentsCount.setText(result.getComments_count() + "");
+                        holder.mVib.mLikeCount.setTag(result);
+                        holder.mVib.mCommentsCount.setTag(result);
+                        holder.mPlayPause.setTag(result);
+                        holder.mPlayPause.setOnClickListener(mPlayPauseListener);
+                    }
+                    break;
             }
 
         }
 
         @Override
         public int getItemCount() {
-            return mVideoData==null?1:mVideoData.size();
+            return mVideoDataTotal == null ? 1 : mVideoDataTotal.size();
         }
 
+        @Override
+        public int getItemViewType(int position) {
+            int count = getItemCount();
+            if(position == count - 1) {
+                if(hasNet) {
+                    return 111;
+                } else {
+                    return 112;
+                }
+            }
+            return 113;
+        }
+
+        public abstract void reGetData();
     }
 
-    private View.OnClickListener mPlayPauseListener=new View.OnClickListener() {
+    private View.OnClickListener mPlayPauseListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            GetVideoResult data=(GetVideoResult)v.getTag();
-            JsoupParse.htmlParseString(data,mHandler);
-//            Log.e("test", "onClick: "+url);
+            GetVideoResult data = (GetVideoResult)v.getTag();
+            JsoupParse.htmlParseString(data, mHandler);
         }
     };
 
-    public class VideoHolder extends RecyclerView.ViewHolder{
+    public class VideoHolder extends RecyclerView.ViewHolder {
 
         SimpleDraweeView mCoverPic;
         TextView mDescription;
@@ -173,13 +330,27 @@ public class VideoFragmentDetail extends BaseFragment implements Callback{
         TextView mPlayCount;
         VideoItemBottom mVib;
 
-        public VideoHolder(View itemView) {
+        TextView mFootView;
+        TextView mNetError;
+
+        VideoHolder(View itemView, int type) {
             super(itemView);
-            mCoverPic = (SimpleDraweeView)itemView.findViewById(R.id.video_cover_pic);
-            mDescription = (TextView)itemView.findViewById(R.id.video_description);
-            mPlayPause = (SimpleDraweeView)itemView.findViewById(R.id.play_pause);
-            mPlayCount = (TextView)itemView.findViewById(R.id.play_count);
-            mVib = (VideoItemBottom)itemView.findViewById(R.id.vib);
+            switch(type) {
+                case 111:
+                    mFootView = (TextView)itemView.findViewById(R.id.foot_view);
+                    break;
+                case 112:
+                    mNetError = (TextView)itemView.findViewById(R.id.net_error);
+                    break;
+                case 113:
+                    mCoverPic = (SimpleDraweeView)itemView.findViewById(R.id.video_cover_pic);
+                    mDescription = (TextView)itemView.findViewById(R.id.video_description);
+                    mPlayPause = (SimpleDraweeView)itemView.findViewById(R.id.play_pause);
+                    mPlayCount = (TextView)itemView.findViewById(R.id.play_count);
+                    mVib = (VideoItemBottom)itemView.findViewById(R.id.vib);
+                    break;
+            }
+
         }
     }
 }

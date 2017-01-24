@@ -1,10 +1,13 @@
 package com.example.yangyu.palmread.Activity;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
@@ -27,6 +30,8 @@ public class VideoDetailActivity extends AppCompatActivity implements View.OnCli
     private ProgressBar mProgressBar;
     private ImageView mBack;
     private TextView mEditor;
+    private WebSettings mWebSetting;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,20 +44,31 @@ public class VideoDetailActivity extends AppCompatActivity implements View.OnCli
         mTopBar = findViewById(R.id.video_topbar);
         mBack = (ImageView)mTopBar.findViewById(R.id.back);
         mEditor = (TextView)mTopBar.findViewById(R.id.editor);
+        mWebSetting = mWebView.getSettings();
+        mWebSetting.setDomStorageEnabled(true);
+        mWebSetting.setJavaScriptEnabled(true);
         mWebView.setWebViewClient(mClient);
         mWebView.setWebChromeClient(mChromeClient);
-//        mWebView.setFocusable(true);
-//        mWebView.requestFocus();
-//        mWebView.setFocusableInTouchMode(true);
-//        mWebView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
-//        mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.loadUrl(mUrl);
         mBack.setOnClickListener(this);
     }
     private WebViewClient mClient=new WebViewClient(){
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            view.loadUrl(url);
+            if(Uri.parse(url).getScheme().equals("http")|Uri.parse(url).getScheme().equals("https")){
+                mWebView=view;
+                view.loadUrl(url);
+                return super.shouldOverrideUrlLoading(view, url);
+            }else{
+                try{
+                    Intent intent=new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse(url));
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
             return true;
         }
     };

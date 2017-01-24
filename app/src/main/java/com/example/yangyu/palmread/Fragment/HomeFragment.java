@@ -38,7 +38,7 @@ import okhttp3.Response;
  * Created by yangyu on 2017/1/9.
  */
 
-public class HomeFragment extends BaseFragment implements Callback,SwipeRefreshLayout.OnRefreshListener {
+public class HomeFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
     public static final String TAG = HomeFragment.class.getCanonicalName();
     private View mLayout;
     private SwipeRefreshLayout mRefresh;
@@ -46,7 +46,7 @@ public class HomeFragment extends BaseFragment implements Callback,SwipeRefreshL
     private MyAdapter mAdapter;
     private MyItemDecoration mDecoration;
     private String mUrl;
-    private String mResult;
+//    private String mResult;
     private GetHomePageresult mHomePageresult;
     private GetHomePageresult.PageData[] mPageData;
     private Handler mHandler = new Handler() {
@@ -56,6 +56,7 @@ public class HomeFragment extends BaseFragment implements Callback,SwipeRefreshL
             int what = msg.what;
             switch(what) {
                 case 0:
+                    mAdapter.notifyDataSetChanged();
                     ToastUtils.TipToast(getActivity(), "网络错误，请检查您的网络");
                     break;
                 case 1:
@@ -72,6 +73,8 @@ public class HomeFragment extends BaseFragment implements Callback,SwipeRefreshL
         }
     };
     private String mTab;
+    private HomeCallBack mCallBack;
+    private boolean hasNet=true;
 
     @Nullable
     @Override
@@ -87,7 +90,7 @@ public class HomeFragment extends BaseFragment implements Callback,SwipeRefreshL
         Bundle arguments = getArguments();
         mTab = arguments.getString(ProjectContent.EXTRA_TAB_INDEX);
         mUrl = UrlParseUtils.onStringParseUrl(mTab);
-        HomeCollectionLogic.getNetData(mUrl, this, mTab,mHandler);
+        HomeCollectionLogic.getNetData(mUrl, mCallBack, mTab,mHandler);
         mRefresh.setColorSchemeResources(android.R.color.holo_blue_bright,android.R.color.holo_green_light);
         mRefresh.setOnRefreshListener(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
@@ -103,7 +106,13 @@ public class HomeFragment extends BaseFragment implements Callback,SwipeRefreshL
 
     @Override
     protected void initData() {
-        mAdapter = new MyAdapter();
+        mCallBack = new HomeCallBack();
+        mAdapter = new MyAdapter() {
+            @Override
+            public void reGetData() {
+                HomeCollectionLogic.getNetData(mUrl, mCallBack, mTab,mHandler);
+            }
+        };
         mAdapter.setmOnRecyclerViewItemClick(new OnRecyclerViewItemClick() {
             @Override
             public void onItemClick(View v,GetHomePageresult.PageData data) {
@@ -116,29 +125,33 @@ public class HomeFragment extends BaseFragment implements Callback,SwipeRefreshL
         mDecoration = new MyItemDecoration(getActivity());
     }
 
-    @Override
-    public void onFailure(Call call, IOException e) {
-        mHandler.sendEmptyMessage(0);
-        mRefresh.setRefreshing(false);
-        e.printStackTrace();
-    }
+    private class HomeCallBack implements Callback{
+        @Override
+        public void onFailure(Call call, IOException e) {
+            hasNet=false;
+            mHandler.sendEmptyMessage(0);
+            mRefresh.setRefreshing(false);
+            e.printStackTrace();
+        }
 
-    @Override
-    public void onResponse(Call call, Response response) throws IOException {
-        mHomePageresult = HomeJsonToResult.HomePageParse(GetHomePageresult.class, response.body().string());
-        WebCache.saveMemoryCache(mTab,mHomePageresult);
-        mPageData = mHomePageresult != null ? mHomePageresult.mResult.mData : new GetHomePageresult.PageData[0];
-        mHandler.sendEmptyMessage(1);
+        @Override
+        public void onResponse(Call call, Response response) throws IOException {
+            hasNet=true;
+            mHomePageresult = HomeJsonToResult.HomePageParse(GetHomePageresult.class, response.body().string());
+            WebCache.saveMemoryCache(mTab,mHomePageresult);
+            mPageData = mHomePageresult != null ? mHomePageresult.mResult.mData : new GetHomePageresult.PageData[0];
+            mHandler.sendEmptyMessage(1);
+        }
     }
 
     @Override
     public void onRefresh() {
         mRefresh.setRefreshing(true);
         WebCache.resetMemory(mTab);
-        HomeCollectionLogic.getNetData(mUrl, this,mTab,mHandler);
+        HomeCollectionLogic.getNetData(mUrl, mCallBack,mTab,mHandler);
     }
 
-    private class MyAdapter extends RecyclerView.Adapter<MyHolder> {
+    private abstract class MyAdapter extends RecyclerView.Adapter<MyHolder> {
         private OnRecyclerViewItemClick mOnRecyclerViewItemClick;
 
         void setmOnRecyclerViewItemClick(OnRecyclerViewItemClick mOnRecyclerViewItemClick) {
@@ -147,6 +160,24 @@ public class HomeFragment extends BaseFragment implements Callback,SwipeRefreshL
 
         @Override
         public MyHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            switch(viewType){
+                case 111:
+                    View viewError=LayoutInflater.from(getActivity())
+                            .inflate(R.layout.item_error,parent,false);
+                    return new MyHolder(viewError,111);
+                case 112:
+                    View view = LayoutInflater.from(getActivity())
+                            .inflate(R.layout.item_home, parent, false);
+                    view.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(mOnRecyclerViewItemClick != null) {
+                                mOnRecyclerViewItemClick.onItemClick(v,(GetHomePageresult.PageData)v.getTag());
+                            }
+                        }
+                    });
+                    return new MyHolder(view,112);
+            }
             View view = LayoutInflater.from(getActivity())
                     .inflate(R.layout.item_home, parent, false);
             view.setOnClickListener(new View.OnClickListener() {
@@ -157,60 +188,74 @@ public class HomeFragment extends BaseFragment implements Callback,SwipeRefreshL
                     }
                 }
             });
-            return new MyHolder(view);
+            return new MyHolder(view,112);
         }
 
         @Override
         public void onBindViewHolder(MyHolder holder, int position) {
-            if(mPageData!=null){
-                GetHomePageresult.PageData data=mPageData[position];
-                int num=showPic(data);
-                switch(num){
-                    case 0:
-                        holder.mNewPhoto1.setVisibility(View.GONE);
-                        holder.mNewPhoto2.setVisibility(View.GONE);
-                        holder.mNewPhoto3.setVisibility(View.GONE);
-                        break;
-                    case 1:
-                        holder.mNewPhoto1.setVisibility(View.VISIBLE);
-                        holder.mNewPhoto2.setVisibility(View.GONE);
-                        holder.mNewPhoto3.setVisibility(View.GONE);
-                        ViewGroup.LayoutParams params= holder.mNewPhoto1.getLayoutParams();
-                        DisplayMetrics metric = new DisplayMetrics();
-                        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);
-                        int width = metric.widthPixels;
-                        params.height=width*2/4;
-                        holder.mNewPhoto1.setLayoutParams(params);
-                        holder.mNewPhoto1.setImageURI(data.mPicOne);
-                        break;
-                    case 2:
-                        holder.mNewPhoto1.setVisibility(View.VISIBLE);
-                        holder.mNewPhoto2.setVisibility(View.VISIBLE);
-                        holder.mNewPhoto3.setVisibility(View.GONE);
-                        ViewGroup.LayoutParams params1= holder.mNewPhoto1.getLayoutParams();
-                        ViewGroup.LayoutParams paramsPhotoCase2= holder.mNewPhoto2.getLayoutParams();
-                        params1.height=paramsPhotoCase2.height;
-                        holder.mNewPhoto1.setLayoutParams(params1);
-                        holder.mNewPhoto1.setImageURI(data.mPicOne);
-                        holder.mNewPhoto2.setImageURI(data.mPicTwo);
-                        break;
-                    case 3:
-                        holder.mNewPhoto1.setVisibility(View.VISIBLE);
-                        holder.mNewPhoto2.setVisibility(View.VISIBLE);
-                        holder.mNewPhoto3.setVisibility(View.VISIBLE);
-                        ViewGroup.LayoutParams params2= holder.mNewPhoto1.getLayoutParams();
-                        ViewGroup.LayoutParams paramsPhotoCase3= holder.mNewPhoto2.getLayoutParams();
-                        params2.height=paramsPhotoCase3.height;
-                        holder.mNewPhoto1.setLayoutParams(params2);
-                        holder.mNewPhoto1.setImageURI(data.mPicOne);
-                        holder.mNewPhoto2.setImageURI(data.mPicTwo);
-                        holder.mNewPhoto3.setImageURI(data.mPicThree);
-                        break;
-                }
-                holder.mNewTitle.setText(data.mTitle);
-                holder.mNewTime.setText(data.mData);
-                holder.mNewEditor.setText(data.mAutorName);
-                holder.itemView.setTag(data);
+            int type=getItemViewType(position);
+            switch(type){
+                case 111:
+                    if(holder.mNetError!=null)
+                    holder.mNetError.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            reGetData();
+                        }
+                    });
+                    break;
+                case 112:
+                    if(mPageData!=null){
+                        GetHomePageresult.PageData data=mPageData[position];
+                        int num=showPic(data);
+                        switch(num){
+                            case 0:
+                                holder.mNewPhoto1.setVisibility(View.GONE);
+                                holder.mNewPhoto2.setVisibility(View.GONE);
+                                holder.mNewPhoto3.setVisibility(View.GONE);
+                                break;
+                            case 1:
+                                holder.mNewPhoto1.setVisibility(View.VISIBLE);
+                                holder.mNewPhoto2.setVisibility(View.GONE);
+                                holder.mNewPhoto3.setVisibility(View.GONE);
+                                ViewGroup.LayoutParams params= holder.mNewPhoto1.getLayoutParams();
+                                DisplayMetrics metric = new DisplayMetrics();
+                                getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);
+                                int width = metric.widthPixels;
+                                params.height=width*2/4;
+                                holder.mNewPhoto1.setLayoutParams(params);
+                                holder.mNewPhoto1.setImageURI(data.mPicOne);
+                                break;
+                            case 2:
+                                holder.mNewPhoto1.setVisibility(View.VISIBLE);
+                                holder.mNewPhoto2.setVisibility(View.VISIBLE);
+                                holder.mNewPhoto3.setVisibility(View.GONE);
+                                ViewGroup.LayoutParams params1= holder.mNewPhoto1.getLayoutParams();
+                                ViewGroup.LayoutParams paramsPhotoCase2= holder.mNewPhoto2.getLayoutParams();
+                                params1.height=paramsPhotoCase2.height;
+                                holder.mNewPhoto1.setLayoutParams(params1);
+                                holder.mNewPhoto1.setImageURI(data.mPicOne);
+                                holder.mNewPhoto2.setImageURI(data.mPicTwo);
+                                break;
+                            case 3:
+                                holder.mNewPhoto1.setVisibility(View.VISIBLE);
+                                holder.mNewPhoto2.setVisibility(View.VISIBLE);
+                                holder.mNewPhoto3.setVisibility(View.VISIBLE);
+                                ViewGroup.LayoutParams params2= holder.mNewPhoto1.getLayoutParams();
+                                ViewGroup.LayoutParams paramsPhotoCase3= holder.mNewPhoto2.getLayoutParams();
+                                params2.height=paramsPhotoCase3.height;
+                                holder.mNewPhoto1.setLayoutParams(params2);
+                                holder.mNewPhoto1.setImageURI(data.mPicOne);
+                                holder.mNewPhoto2.setImageURI(data.mPicTwo);
+                                holder.mNewPhoto3.setImageURI(data.mPicThree);
+                                break;
+                        }
+                        holder.mNewTitle.setText(data.mTitle);
+                        holder.mNewTime.setText(data.mData);
+                        holder.mNewEditor.setText(data.mAutorName);
+                        holder.itemView.setTag(data);
+                    }
+                    break;
             }
         }
 
@@ -219,6 +264,17 @@ public class HomeFragment extends BaseFragment implements Callback,SwipeRefreshL
             return mPageData == null ? 1 : mPageData.length;
         }
 
+        @Override
+        public int getItemViewType(int position) {
+            int count=getItemCount();
+            if(count-1==position){
+                if(!hasNet)
+                    return 111;
+            }
+            return 112;
+        }
+
+        public abstract void reGetData();
     }
 
     private int showPic(GetHomePageresult.PageData data){
@@ -253,14 +309,23 @@ public class HomeFragment extends BaseFragment implements Callback,SwipeRefreshL
         private TextView mNewTime;
         private TextView mNewEditor;
 
-        MyHolder(View itemView) {
+        TextView mNetError;
+
+        MyHolder(View itemView,int type) {
             super(itemView);
-            mNewPhoto1 = (SimpleDraweeView)itemView.findViewById(R.id.new_photo1);
-            mNewPhoto2 = (SimpleDraweeView)itemView.findViewById(R.id.new_photo2);
-            mNewPhoto3 = (SimpleDraweeView)itemView.findViewById(R.id.new_photo3);
-            mNewTitle = (TextView)itemView.findViewById(R.id.new_title);
-            mNewTime = (TextView)itemView.findViewById(R.id.new_time);
-            mNewEditor = (TextView)itemView.findViewById(R.id.new_editor);
+            switch(type){
+                case 111:
+                    mNetError=(TextView)itemView.findViewById(R.id.net_error);
+                    break;
+                case 112:
+                    mNewPhoto1 = (SimpleDraweeView)itemView.findViewById(R.id.new_photo1);
+                    mNewPhoto2 = (SimpleDraweeView)itemView.findViewById(R.id.new_photo2);
+                    mNewPhoto3 = (SimpleDraweeView)itemView.findViewById(R.id.new_photo3);
+                    mNewTitle = (TextView)itemView.findViewById(R.id.new_title);
+                    mNewTime = (TextView)itemView.findViewById(R.id.new_time);
+                    mNewEditor = (TextView)itemView.findViewById(R.id.new_editor);
+                    break;
+            }
         }
 
     }

@@ -5,11 +5,15 @@ android {
     buildToolsVersion "24.0.3"
     defaultConfig {
         applicationId "com.example.yangyu.palmread"
-        minSdkVersion 22
-        targetSdkVersion 25
+        minSdkVersion 20
+        targetSdkVersion 22
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+        ndk {
+            abiFilters "armeabi", "armeabi-v7a", "x86", "mips"
+        }
     }
     buildTypes {
         release {
@@ -19,6 +23,11 @@ android {
     }
     productFlavors {
         flavor {
+        }
+    }
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
         }
     }
 }

@@ -13,7 +13,7 @@
         android:clipToPadding="true"
         android:fitsSystemWindows="true"
         android:gravity="center"
-        android:text="掌上阅读"
+        android:text="掌上新闻"
         android:textColor="@android:color/white"
         android:textSize="22sp"/>
 

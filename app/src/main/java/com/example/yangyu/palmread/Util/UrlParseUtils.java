@@ -16,6 +16,6 @@ public class UrlParseUtils {
     }
     public static String getVideoDetailUrlPage(int index,int page){
         String VIDEO_DETAIL_PAGE=getVideoDetailUrl(index)+"&page=%d";
-        return String.format(VIDEO_DETAIL_PAGE,index);
+        return String.format(VIDEO_DETAIL_PAGE,page);
     }
 }
