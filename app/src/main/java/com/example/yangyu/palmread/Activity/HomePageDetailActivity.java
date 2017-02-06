@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.example.yangyu.palmread.Constant.ProjectContent;
 import com.example.yangyu.palmread.Models.GetHomePageresult;
 import com.example.yangyu.palmread.R;
+import com.example.yangyu.palmread.View.HomePageDetaiBottom;
 
 /**
  * Created by yangyu on 2017/1/16.
@@ -30,6 +31,7 @@ public class HomePageDetailActivity extends AppCompatActivity implements View.On
     private String detail_url;
     private String editorName;
     private ProgressBar mProgressBar;
+    private HomePageDetaiBottom mDetailBottom;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,6 +41,7 @@ public class HomePageDetailActivity extends AppCompatActivity implements View.On
         mData = intent.getParcelableExtra(ProjectContent.EXTRA_HOME_FRAGMENT_RESULT);
         setData(mData);
         mWebView = (WebView)findViewById(R.id.news_web);
+        mDetailBottom = (HomePageDetaiBottom) findViewById(R.id.detail_bottom);
         mProgressBar = (ProgressBar)findViewById(R.id.progress);
         mTopBar = findViewById(R.id.top_bar);
         mBack = (ImageView)mTopBar.findViewById(R.id.back);

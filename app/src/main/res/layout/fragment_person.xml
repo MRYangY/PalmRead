@@ -1,18 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
 
     <TextView
-        android:fitsSystemWindows="true"
-        android:clipToPadding="true"
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_centerHorizontal="true"
         android:background="@android:color/holo_red_dark"
+        android:clipToPadding="true"
+        android:fitsSystemWindows="true"
         android:gravity="center"
         android:text="个人中心"
         android:textColor="@android:color/white"
         android:textSize="22sp"/>
+
+    <FrameLayout
+        android:id="@+id/person_login"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:layout_below="@id/title">
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/read_history"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_below="@id/person_login"
+        android:layout_marginTop="10dp"
+        android:gravity="center_vertical"
+        android:padding="8dp"
+        android:text="浏览历史"
+        android:textSize="16sp"
+        android:textColor="#000000"
+        />
+
+    <TextView
+        android:id="@+id/person_collect"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_below="@id/read_history"
+        android:layout_marginTop="10dp"
+        android:gravity="center_vertical"
+        android:padding="8dp"
+        android:text="我的收藏"
+        android:textSize="16sp"
+        android:textColor="#000000"
+        />
+    <TextView
+        android:id="@+id/person_textsize"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_below="@id/person_collect"
+        android:layout_marginTop="10dp"
+        android:gravity="center_vertical"
+        android:padding="8dp"
+        android:text="字体大小"
+        android:textSize="16sp"
+        android:textColor="#000000"
+        />
+    <View
+        android:id="@+id/item_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_below="@id/person_textsize"
+        android:layout_marginTop="5dp"
+        android:textColor="#000000"
+        />
+    <TextView
+        android:id="@+id/software_declare"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_below="@id/item_divider"
+        android:layout_marginTop="10dp"
+        android:gravity="center_vertical"
+        android:padding="8dp"
+        android:text="版权声明"
+        android:textSize="16sp"
+        android:textColor="#000000"
+        />
+
+    <TextView
+        android:id="@+id/software_updata"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_below="@id/software_declare"
+        android:layout_marginTop="10dp"
+        android:gravity="center_vertical"
+        android:padding="8dp"
+        android:text="检查更新"
+        android:textSize="16sp"
+        android:textColor="#000000"
+        />
 </RelativeLayout>
