@@ -33,14 +33,14 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:padding="5dp"
-        android:src="@drawable/ic_video_tool_24dp"/>
+        android:src="@drawable/video_item_bottom_tool_selector"/>
 
     <TextView
         android:id="@+id/comments_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toLeftOf="@id/tool"
-        android:drawableLeft="@drawable/ic_comment_black_24dp"
+        android:drawableLeft="@drawable/video_item_bottom_comment_selector"
         android:gravity="center"
         android:padding="5dp"
         android:text="300"
@@ -51,7 +51,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toLeftOf="@id/comments_count"
-        android:drawableLeft="@drawable/ic_favorite_black_24dp"
+        android:drawableLeft="@drawable/video_item_bottom_like_selector"
         android:gravity="center"
         android:padding="5dp"
         android:text="1200"

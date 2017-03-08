@@ -13,12 +13,12 @@
         android:padding="5dp"
         android:layout_centerVertical="true"
         />
-    <!--<ImageView-->
-        <!--android:id="@+id/go_top"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_centerInParent="true"-->
-        <!--android:background="@drawable/home_bottom_selector_go_top"/>-->
+    <ImageView
+        android:id="@+id/person"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/home_bottom_selector_person"/>
     <ImageView
         android:id="@+id/home_detail_bottom_share"
         android:layout_width="wrap_content"

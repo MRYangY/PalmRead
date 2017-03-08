@@ -1,10 +1,13 @@
 package com.example.yangyu.palmread.Activity;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
@@ -99,5 +102,40 @@ public class HomePageActivity extends AppCompatActivity implements BottomNavigat
     protected void onPause() {
         super.onPause();
         JCVideoPlayer.releaseAllVideos();
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        int keyAction=event.getAction();
+        int keyCode=event.getKeyCode();
+        if (keyAction==KeyEvent.ACTION_DOWN){
+            switch (keyCode){
+                case KeyEvent.KEYCODE_BACK:
+                    onCreateExitDialog();
+                    break;
+            }
+        }
+        return super.dispatchKeyEvent(event);
+    }
+
+    private void onCreateExitDialog(){
+        AlertDialog.Builder builder=new AlertDialog.Builder(this);
+        builder.setTitle("掌上新闻");
+        builder.setMessage("是否退出掌上新闻？");
+        builder.setCancelable(false);
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                finish();
+            }
+        });
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.show();
     }
 }

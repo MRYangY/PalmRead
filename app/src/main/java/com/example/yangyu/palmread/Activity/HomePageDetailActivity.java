@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.example.yangyu.palmread.Constant.ProjectContent;
 import com.example.yangyu.palmread.Models.GetHomePageresult;
 import com.example.yangyu.palmread.R;
+import com.example.yangyu.palmread.Util.NewsCollectDbUtils;
 import com.example.yangyu.palmread.View.HomePageDetaiBottom;
 
 /**
@@ -32,6 +33,7 @@ public class HomePageDetailActivity extends AppCompatActivity implements View.On
     private String editorName;
     private ProgressBar mProgressBar;
     private HomePageDetaiBottom mDetailBottom;
+    private boolean isFavorite;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,9 @@ public class HomePageDetailActivity extends AppCompatActivity implements View.On
         mWebView.setWebViewClient(mClient);
         mWebView.setWebChromeClient(mChromeClient);
         mBack.setOnClickListener(this);
+        mDetailBottom.setmData(mData);
+        isFavorite= NewsCollectDbUtils.isFavoriteNews(this,mData);
+        mDetailBottom.setFavorite(isFavorite);
     }
     private WebViewClient mClient=new WebViewClient(){
         @Override

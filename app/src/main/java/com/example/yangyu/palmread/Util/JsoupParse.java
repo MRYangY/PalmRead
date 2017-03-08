@@ -3,6 +3,7 @@ package com.example.yangyu.palmread.Util;
 import android.os.Handler;
 import android.os.Message;
 
+import com.example.yangyu.palmread.Fragment.VideoFragmentDetail;
 import com.example.yangyu.palmread.Models.GetVideoResult;
 
 import org.jsoup.Jsoup;
@@ -27,7 +28,7 @@ public class JsoupParse{
                                 .get(0).attr("content");
                         Message message=  new Message();
                         message.obj=content[0];
-                        message.what=02;
+                        message.what= VideoFragmentDetail.MSG_GET_URL;
                         handler.sendMessage(message);
                     } catch(IOException e) {
                         e.printStackTrace();

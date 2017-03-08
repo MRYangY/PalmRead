@@ -30,6 +30,15 @@ public class GetVideoResult {
     private int comments_count;
     private int likes_count;
     private String created_at;
+    private long timestamp;
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
 
     public int getId() { return id;}
 

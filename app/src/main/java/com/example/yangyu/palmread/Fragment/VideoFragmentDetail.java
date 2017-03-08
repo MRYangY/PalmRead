@@ -23,6 +23,7 @@ import com.example.yangyu.palmread.R;
 import com.example.yangyu.palmread.Util.JsoupParse;
 import com.example.yangyu.palmread.Util.ToastUtils;
 import com.example.yangyu.palmread.Util.UrlParseUtils;
+import com.example.yangyu.palmread.Util.VideoHistoryDbUtils;
 import com.example.yangyu.palmread.View.MyItemDecoration;
 import com.example.yangyu.palmread.View.VideoItemBottom;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -41,6 +42,9 @@ import okhttp3.Response;
 
 public class VideoFragmentDetail extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
 
+    public static final int MSG_NET_ERROR=00;
+    public static final int MSG_REFRESH=01;
+    public static final int MSG_GET_URL=02;
     private View mLayout;
     private SwipeRefreshLayout mRefreshLayout;
     private RecyclerView mContentView;
@@ -62,16 +66,16 @@ public class VideoFragmentDetail extends BaseFragment implements SwipeRefreshLay
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch(msg.what) {
-                case 00:
+                case MSG_NET_ERROR:
                     mRefreshLayout.setRefreshing(false);
-                    ToastUtils.TipToast(getActivity(), "短视频获取网络错误！！");
+                    ToastUtils.TipToast(getActivity(), getString(R.string.video_net_error));
                     mAdapter.notifyDataSetChanged();
                     break;
-                case 01:
+                case MSG_REFRESH:
                     mRefreshLayout.setRefreshing(false);
                     mAdapter.notifyDataSetChanged();
                     break;
-                case 02:
+                case MSG_GET_URL:
                     Intent intent = new Intent(getActivity(), VideoPlayActivity.class);
                     intent.putExtra(ProjectContent.EXTRA_VIDEO_PLAY_URL, (String)msg.obj);
                     startActivity(intent);
@@ -123,7 +127,7 @@ public class VideoFragmentDetail extends BaseFragment implements SwipeRefreshLay
         VideoLogic.getVideoNoPage(moreUrl, mCallBack);
     }
 
-    public abstract class EndLessOnScrollListener extends RecyclerView.OnScrollListener {
+    abstract class EndLessOnScrollListener extends RecyclerView.OnScrollListener {
 
         //声明一个LinearLayoutManager
         private LinearLayoutManager mLinearLayoutManager;
@@ -207,7 +211,7 @@ public class VideoFragmentDetail extends BaseFragment implements SwipeRefreshLay
         public void onFailure(Call call, IOException e) {
             e.printStackTrace();
             hasNet = false;
-            mHandler.sendEmptyMessage(00);
+            mHandler.sendEmptyMessage(MSG_NET_ERROR);
         }
 
         @Override
@@ -218,8 +222,10 @@ public class VideoFragmentDetail extends BaseFragment implements SwipeRefreshLay
             if(mVideoDataTotal==null){
                 mVideoDataTotal=new ArrayList<>();
             }
-            mVideoDataTotal.addAll(mVideoData);
-            mHandler.sendEmptyMessage(01);
+            if (mVideoData!=null) {
+                mVideoDataTotal.addAll(mVideoData);
+            }
+            mHandler.sendEmptyMessage(MSG_REFRESH);
         }
 
     }
@@ -285,6 +291,7 @@ public class VideoFragmentDetail extends BaseFragment implements SwipeRefreshLay
                         holder.mVib.mCommentsCount.setText(result.getComments_count() + "");
                         holder.mVib.mLikeCount.setTag(result);
                         holder.mVib.mCommentsCount.setTag(result);
+                        holder.mVib.mTool.setTag(result);
                         holder.mPlayPause.setTag(result);
                         holder.mPlayPause.setOnClickListener(mPlayPauseListener);
                     }
@@ -318,11 +325,12 @@ public class VideoFragmentDetail extends BaseFragment implements SwipeRefreshLay
         @Override
         public void onClick(View v) {
             GetVideoResult data = (GetVideoResult)v.getTag();
+            VideoHistoryDbUtils.insertDataVideoHistory(getContext(),data);
             JsoupParse.htmlParseString(data, mHandler);
         }
     };
 
-    public class VideoHolder extends RecyclerView.ViewHolder {
+    class VideoHolder extends RecyclerView.ViewHolder {
 
         SimpleDraweeView mCoverPic;
         TextView mDescription;

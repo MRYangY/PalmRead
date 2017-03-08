@@ -43,7 +43,7 @@ public class VideoPlayActivity extends AppCompatActivity {
         playUrl = getIntent().getStringExtra(ProjectContent.EXTRA_VIDEO_PLAY_URL);
         mVideo = (VideoView)findViewById(R.id.video_view);
         mVideo.setVideoLayout(VideoView.VIDEO_LAYOUT_STRETCH,0);
-        mVideo.setVideoURI(Uri.parse(playUrl));
+        mVideo.setVideoURI(Uri.parse("http://mvvideo2.meitudata.com/58bfaedcc5958941.mp4"));
         MediaController mediaController=new MediaController(this);
         mVideo.setMediaController(mediaController);
         mVideo.start();

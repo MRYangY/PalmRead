@@ -23,6 +23,7 @@ import com.example.yangyu.palmread.Logic.HomeJsonToResult;
 import com.example.yangyu.palmread.Logic.WebCache;
 import com.example.yangyu.palmread.Models.GetHomePageresult;
 import com.example.yangyu.palmread.R;
+import com.example.yangyu.palmread.Util.NewsHistoryDbUtils;
 import com.example.yangyu.palmread.Util.ToastUtils;
 import com.example.yangyu.palmread.Util.UrlParseUtils;
 import com.example.yangyu.palmread.View.MyItemDecoration;
@@ -117,6 +118,7 @@ public class HomeFragment extends BaseFragment implements SwipeRefreshLayout.OnR
             @Override
             public void onItemClick(View v,GetHomePageresult.PageData data) {
 //                Toast.makeText(getActivity(), "Item Click", Toast.LENGTH_LONG).show();
+                NewsHistoryDbUtils.insertDataNewHistory(getContext(),data);
                 Intent intent=new Intent(getActivity(), HomePageDetailActivity.class);
                 intent.putExtra(ProjectContent.EXTRA_HOME_FRAGMENT_RESULT,data);
                 startActivity(intent);

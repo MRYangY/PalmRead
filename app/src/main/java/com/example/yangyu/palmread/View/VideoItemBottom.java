@@ -4,8 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -13,6 +15,9 @@ import com.example.yangyu.palmread.Activity.VideoDetailActivity;
 import com.example.yangyu.palmread.Constant.ProjectContent;
 import com.example.yangyu.palmread.Models.GetVideoResult;
 import com.example.yangyu.palmread.R;
+import com.example.yangyu.palmread.Util.ToastUtils;
+import com.example.yangyu.palmread.Util.VideoCollectDbUtils;
+import com.example.yangyu.palmread.Util.VideoHistoryDbUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 /**
@@ -47,10 +52,11 @@ public class VideoItemBottom extends RelativeLayout implements View.OnClickListe
         mTool = (ImageView) findViewById(R.id.tool);
         mLikeCount.setOnClickListener(this);
         mCommentsCount.setOnClickListener(this);
+        mTool.setOnClickListener(this);
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(final View v) {
         switch(v.getId()){
             case R.id.like_count:
                 likeCommentAction(v);
@@ -59,12 +65,36 @@ public class VideoItemBottom extends RelativeLayout implements View.OnClickListe
                 likeCommentAction(v);
                 break;
             case R.id.tool:
+                PopupMenu popupMenu=new PopupMenu(getContext(),mTool);
+                popupMenu.getMenuInflater().inflate(R.menu.popup_menu,popupMenu.getMenu());
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()){
+                            case R.id.collect:
+                                GetVideoResult result=(GetVideoResult)v.getTag();
+                                long raw= VideoCollectDbUtils.insertDataVideoCollect(getContext(),result);
+                                if (raw!=-1){
+                                    ToastUtils.TipToast(getContext(),"收藏成功");
+                                }else{
+                                    ToastUtils.TipToast(getContext(),"收藏失败，可能已经收藏过了哦~");
+                                }
+                                break;
+                            case R.id.share:
+                                ToastUtils.TipToast(getContext(),"分享");
+                                break;
+                        }
+                        return false;
+                    }
+                });
+                popupMenu.show();
                 break;
         }
     }
 
     private void likeCommentAction(View v){
         GetVideoResult result=(GetVideoResult)v.getTag();
+        VideoHistoryDbUtils.insertDataVideoHistory(getContext(),result);
         Intent intent=new Intent(getContext(), VideoDetailActivity.class);
         intent.putExtra(ProjectContent.EXTRA_VIDEO_URL,result.getUrl());
         intent.putExtra(ProjectContent.EXTRA_VIDEO_USER_NAME,result.getScreen_name());

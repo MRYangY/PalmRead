@@ -50,6 +50,8 @@ public class GetHomePageresult {
         @JSONField(name = "thumbnail_pic_s03")
         public String mPicThree;
 
+        public long mTime;
+
         protected PageData(Parcel in) {
             mUniquekey = in.readString();
             mTitle = in.readString();
@@ -60,6 +62,7 @@ public class GetHomePageresult {
             mPicOne = in.readString();
             mPicTwo = in.readString();
             mPicThree = in.readString();
+            mTime = in.readLong();
         }
 
         public static final Creator<PageData> CREATOR = new Creator<PageData>() {
@@ -90,6 +93,7 @@ public class GetHomePageresult {
             dest.writeString(mPicOne);
             dest.writeString(mPicTwo);
             dest.writeString(mPicThree);
+            dest.writeLong(mTime);
         }
     }
 

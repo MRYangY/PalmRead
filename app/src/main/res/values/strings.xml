@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">掌上新闻</string>
+    <string name="video_net_error">短视频获取网络错误</string>
 </resources>

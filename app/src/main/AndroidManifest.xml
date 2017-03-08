@@ -33,6 +33,8 @@
             android:launchMode="singleTop"
             android:theme="@android:style/Theme.NoTitleBar"
             android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity android:name=".Activity.PersonCollectActivity"/>
+        <activity android:name=".Activity.PersonHistoryActivity"/>
 
     </application>
 
