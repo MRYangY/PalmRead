@@ -11,4 +11,8 @@ public class ProjectContent {
     public static String EXTRA_VIDEO_URL="ExtraVideoUrlTAG";
     public static String EXTRA_VIDEO_PLAY_URL="ExtraVideoUrlTAG";
     public static String EXTRA_VIDEO_USER_NAME="ExtraVideoUserNameTAG";
+    public static final String ACTION_NEWS_COLLECT_CHANGE="news_collect_change";
+    public static final String ACTION_NEWS_HISTORY_CHANGE="news_history_change";
+//    public static final String ACTION_VIDEO_COLLECT_CHANGE="video_collect_change";
+//    public static final String ACTION_VIDEO_HISTORY_CHANGE="video_history_change";
 }

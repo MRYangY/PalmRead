@@ -1,6 +1,9 @@
 package com.example.yangyu.palmread.Fragment;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -33,22 +36,52 @@ public class NewsCollectedFragment extends BaseFragment {
 
     private List<GetHomePageresult.PageData> mPageData;
     private MyAdapter mAdapter;
+    private boolean isSucceed = true;
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            switch (action) {
+                case ProjectContent.ACTION_NEWS_COLLECT_CHANGE:
+                    mAdapter.notifyDataSetChanged();
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mLayout= LayoutInflater.from(getContext()).inflate(R.layout.fragment_collect,container,false);
+        mLayout = LayoutInflater.from(getContext()).inflate(R.layout.fragment_collect, container, false);
         return mLayout;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mPageData= NewsCollectDbUtils.cursorToPageData(NewsCollectDbUtils.quaryDataNewCollect(getContext()));
+        mPageData = NewsCollectDbUtils.cursorToPageData(NewsCollectDbUtils.quaryDataNewCollect(getContext()), getContext());
         mNewsCollectContent.setLayoutManager(new LinearLayoutManager(getContext()));
         mNewsCollectContent.addItemDecoration(new MyItemDecoration(getContext()));
         mNewsCollectContent.setAdapter(mAdapter);
-        mAdapter.notifyDataSetChanged();
+        isSucceed = mPageData.size() != 0;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ProjectContent.ACTION_NEWS_COLLECT_CHANGE);
+        getActivity().registerReceiver(mReceiver, filter);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mReceiver != null) {
+            getActivity().unregisterReceiver(mReceiver);
+        }
     }
 
     @Override
@@ -67,8 +100,8 @@ public class NewsCollectedFragment extends BaseFragment {
         mAdapter.setmOnRecyclerViewItemClick(new OnRecyclerViewItemClick() {
             @Override
             public void onItemClick(View v, GetHomePageresult.PageData modelData) {
-                Intent intent=new Intent(getActivity(), HomePageDetailActivity.class);
-                intent.putExtra(ProjectContent.EXTRA_HOME_FRAGMENT_RESULT,modelData);
+                Intent intent = new Intent(getActivity(), HomePageDetailActivity.class);
+                intent.putExtra(ProjectContent.EXTRA_HOME_FRAGMENT_RESULT, modelData);
                 startActivity(intent);
             }
         });
@@ -85,27 +118,27 @@ public class NewsCollectedFragment extends BaseFragment {
 
         TextView mDataNull;
 
-        MyHolder(View itemView,int type) {
+        MyHolder(View itemView, int type) {
             super(itemView);
-            switch(type){
+            switch (type) {
                 case 111:
-                    mDataNull=(TextView)itemView.findViewById(R.id.data_null);
+                    mDataNull = (TextView) itemView.findViewById(R.id.data_null);
                     break;
                 case 112:
-                    mNewPhoto1 = (SimpleDraweeView)itemView.findViewById(R.id.new_photo1);
-                    mNewPhoto2 = (SimpleDraweeView)itemView.findViewById(R.id.new_photo2);
-                    mNewPhoto3 = (SimpleDraweeView)itemView.findViewById(R.id.new_photo3);
-                    mNewTitle = (TextView)itemView.findViewById(R.id.new_title);
-                    mNewTime = (TextView)itemView.findViewById(R.id.new_time);
-                    mNewEditor = (TextView)itemView.findViewById(R.id.new_editor);
+                    mNewPhoto1 = (SimpleDraweeView) itemView.findViewById(R.id.new_photo1);
+                    mNewPhoto2 = (SimpleDraweeView) itemView.findViewById(R.id.new_photo2);
+                    mNewPhoto3 = (SimpleDraweeView) itemView.findViewById(R.id.new_photo3);
+                    mNewTitle = (TextView) itemView.findViewById(R.id.new_title);
+                    mNewTime = (TextView) itemView.findViewById(R.id.new_time);
+                    mNewEditor = (TextView) itemView.findViewById(R.id.new_editor);
                     break;
             }
         }
 
     }
 
-    public interface OnRecyclerViewItemClick {
-        void onItemClick(View v,GetHomePageresult.PageData modelData);
+    private interface OnRecyclerViewItemClick {
+        void onItemClick(View v, GetHomePageresult.PageData modelData);
     }
 
     private class MyAdapter extends RecyclerView.Adapter<MyHolder> {
@@ -117,55 +150,48 @@ public class NewsCollectedFragment extends BaseFragment {
 
         @Override
         public MyHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            switch(viewType){
+            switch (viewType) {
                 case 111:
-                    View viewError=LayoutInflater.from(getActivity())
-                            .inflate(R.layout.item_null,parent,false);
-                    return new MyHolder(viewError,111);
+                    View viewError = LayoutInflater.from(getActivity())
+                            .inflate(R.layout.item_null, parent, false);
+                    return new MyHolder(viewError, 111);
                 case 112:
                     View view = LayoutInflater.from(getActivity())
                             .inflate(R.layout.item_home, parent, false);
                     view.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if(mOnRecyclerViewItemClick != null) {
-                                mOnRecyclerViewItemClick.onItemClick(v,(GetHomePageresult.PageData)v.getTag());
+                            if (mOnRecyclerViewItemClick != null) {
+                                mOnRecyclerViewItemClick.onItemClick(v, (GetHomePageresult.PageData) v.getTag());
                             }
                         }
                     });
-                    return new MyHolder(view,112);
+                    return new MyHolder(view, 112);
             }
             View view = LayoutInflater.from(getActivity())
                     .inflate(R.layout.item_home, parent, false);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(mOnRecyclerViewItemClick != null) {
-                        mOnRecyclerViewItemClick.onItemClick(v,(GetHomePageresult.PageData)v.getTag());
+                    if (mOnRecyclerViewItemClick != null) {
+                        mOnRecyclerViewItemClick.onItemClick(v, (GetHomePageresult.PageData) v.getTag());
                     }
                 }
             });
-            return new MyHolder(view,112);
+            return new MyHolder(view, 112);
         }
 
         @Override
         public void onBindViewHolder(MyHolder holder, int position) {
-            int type=getItemViewType(position);
-            switch(type){
+            int type = getItemViewType(position);
+            switch (type) {
                 case 111:
-//                    if(holder.mDataNull!=null)
-//                        holder.mDataNull.setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-////                                reGetData();
-//                            }
-//                        });
                     break;
                 case 112:
-                    if(mPageData!=null){
-                        GetHomePageresult.PageData data=mPageData.get(position);
-                        int num=showPic(data);
-                        switch(num){
+                    if (mPageData != null) {
+                        GetHomePageresult.PageData data = mPageData.get(position);
+                        int num = showPic(data);
+                        switch (num) {
                             case 0:
                                 holder.mNewPhoto1.setVisibility(View.GONE);
                                 holder.mNewPhoto2.setVisibility(View.GONE);
@@ -175,11 +201,11 @@ public class NewsCollectedFragment extends BaseFragment {
                                 holder.mNewPhoto1.setVisibility(View.VISIBLE);
                                 holder.mNewPhoto2.setVisibility(View.GONE);
                                 holder.mNewPhoto3.setVisibility(View.GONE);
-                                ViewGroup.LayoutParams params= holder.mNewPhoto1.getLayoutParams();
+                                ViewGroup.LayoutParams params = holder.mNewPhoto1.getLayoutParams();
                                 DisplayMetrics metric = new DisplayMetrics();
                                 getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);
                                 int width = metric.widthPixels;
-                                params.height=width*2/4;
+                                params.height = width * 2 / 4;
                                 holder.mNewPhoto1.setLayoutParams(params);
                                 holder.mNewPhoto1.setImageURI(data.mPicOne);
                                 break;
@@ -187,9 +213,9 @@ public class NewsCollectedFragment extends BaseFragment {
                                 holder.mNewPhoto1.setVisibility(View.VISIBLE);
                                 holder.mNewPhoto2.setVisibility(View.VISIBLE);
                                 holder.mNewPhoto3.setVisibility(View.GONE);
-                                ViewGroup.LayoutParams params1= holder.mNewPhoto1.getLayoutParams();
-                                ViewGroup.LayoutParams paramsPhotoCase2= holder.mNewPhoto2.getLayoutParams();
-                                params1.height=paramsPhotoCase2.height;
+                                ViewGroup.LayoutParams params1 = holder.mNewPhoto1.getLayoutParams();
+                                ViewGroup.LayoutParams paramsPhotoCase2 = holder.mNewPhoto2.getLayoutParams();
+                                params1.height = paramsPhotoCase2.height;
                                 holder.mNewPhoto1.setLayoutParams(params1);
                                 holder.mNewPhoto1.setImageURI(data.mPicOne);
                                 holder.mNewPhoto2.setImageURI(data.mPicTwo);
@@ -198,9 +224,9 @@ public class NewsCollectedFragment extends BaseFragment {
                                 holder.mNewPhoto1.setVisibility(View.VISIBLE);
                                 holder.mNewPhoto2.setVisibility(View.VISIBLE);
                                 holder.mNewPhoto3.setVisibility(View.VISIBLE);
-                                ViewGroup.LayoutParams params2= holder.mNewPhoto1.getLayoutParams();
-                                ViewGroup.LayoutParams paramsPhotoCase3= holder.mNewPhoto2.getLayoutParams();
-                                params2.height=paramsPhotoCase3.height;
+                                ViewGroup.LayoutParams params2 = holder.mNewPhoto1.getLayoutParams();
+                                ViewGroup.LayoutParams paramsPhotoCase3 = holder.mNewPhoto2.getLayoutParams();
+                                params2.height = paramsPhotoCase3.height;
                                 holder.mNewPhoto1.setLayoutParams(params2);
                                 holder.mNewPhoto1.setImageURI(data.mPicOne);
                                 holder.mNewPhoto2.setImageURI(data.mPicTwo);
@@ -218,14 +244,14 @@ public class NewsCollectedFragment extends BaseFragment {
 
         @Override
         public int getItemCount() {
-            return mPageData.size() == 0 ? 0 : mPageData.size();
+            return mPageData.size() == 0 ? 1 : mPageData.size();
         }
 
         @Override
         public int getItemViewType(int position) {
-            int count=getItemCount();
-            if(count==position){
-//                if(!hasNet)
+            int count = getItemCount();
+            if (count - 1 == position) {
+                if (!isSucceed)
                     return 111;
             }
             return 112;
@@ -233,21 +259,21 @@ public class NewsCollectedFragment extends BaseFragment {
 
     }
 
-    private int showPic(GetHomePageresult.PageData data){
-        int count=0;
-        if(!TextUtils.isEmpty(data.mPicOne)){
-            count=1;
-        }else {
+    private int showPic(GetHomePageresult.PageData data) {
+        int count = 0;
+        if (!TextUtils.isEmpty(data.mPicOne)) {
+            count = 1;
+        } else {
             return count;
         }
-        if(!TextUtils.isEmpty(data.mPicTwo)){
-            count=2;
-        }else {
+        if (!TextUtils.isEmpty(data.mPicTwo)) {
+            count = 2;
+        } else {
             return count;
         }
-        if(!TextUtils.isEmpty(data.mPicThree)){
-            count=3;
-        }else {
+        if (!TextUtils.isEmpty(data.mPicThree)) {
+            count = 3;
+        } else {
             return count;
         }
         return count;
