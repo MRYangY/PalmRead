@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:name=".Base.MyApplication">
-        <activity android:name=".Activity.HomePageActivity"
+        <activity android:name=".Activity.WelcomeActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -35,7 +35,7 @@
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity android:name=".Activity.PersonCollectActivity"/>
         <activity android:name=".Activity.PersonHistoryActivity"/>
-
+        <activity android:name=".Activity.HomePageActivity"/>
     </application>
 
 </manifest>

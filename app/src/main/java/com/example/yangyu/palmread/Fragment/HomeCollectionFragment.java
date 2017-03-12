@@ -26,7 +26,7 @@ public class HomeCollectionFragment extends BaseFragment {
     private ViewPager mPager;
     private String[] mTabList;
     private String[] mTabIndex;
-    private HomeCollectionAdaptor mAdapter;
+    public HomeCollectionAdaptor mAdapter;
 
     @Nullable
     @Override

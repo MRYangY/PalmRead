@@ -1,12 +1,15 @@
 package com.example.yangyu.palmread.View;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.example.yangyu.palmread.Activity.HomePageDetailActivity;
+import com.example.yangyu.palmread.Constant.ProjectContent;
 import com.example.yangyu.palmread.Models.GetHomePageresult;
 import com.example.yangyu.palmread.R;
 import com.example.yangyu.palmread.Util.NewsCollectDbUtils;
@@ -42,7 +45,15 @@ public class HomePageDetaiBottom extends LinearLayout {
     private OnClickListener mGoPersonListener=new OnClickListener() {
         @Override
         public void onClick(View v) {
-            ToastUtils.TipToast(getContext(),"跳转到个人中心");
+            Intent intent=new Intent();
+            intent.setAction(ProjectContent.EXTRA_TO_PERSON);
+            intent.putExtra("to_person",true);
+            if (getContext() instanceof HomePageDetailActivity){
+                HomePageDetailActivity activity=((HomePageDetailActivity) getContext());
+                activity.sendBroadcast(intent);
+                activity.finish();
+            }
+
         }
     };
 
