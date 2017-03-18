@@ -12,6 +12,7 @@ import com.example.yangyu.palmread.Activity.HomePageDetailActivity;
 import com.example.yangyu.palmread.Constant.ProjectContent;
 import com.example.yangyu.palmread.Models.GetHomePageresult;
 import com.example.yangyu.palmread.R;
+import com.example.yangyu.palmread.Util.CommonUtils;
 import com.example.yangyu.palmread.Util.NewsCollectDbUtils;
 import com.example.yangyu.palmread.Util.ToastUtils;
 
@@ -41,6 +42,7 @@ public class HomePageDetaiBottom extends LinearLayout {
         mShare=(ImageView) findViewById(R.id.home_detail_bottom_share);
         mGoPerson.setOnClickListener(mGoPersonListener);
         mCollect.setOnClickListener(mCollectListener);
+        mShare.setOnClickListener(mShareListener);
     }
     private OnClickListener mGoPersonListener=new OnClickListener() {
         @Override
@@ -80,7 +82,7 @@ public class HomePageDetaiBottom extends LinearLayout {
     private OnClickListener mShareListener=new OnClickListener() {
         @Override
         public void onClick(View v) {
-
+            CommonUtils.showShare(mData,getContext());
         }
     };
 

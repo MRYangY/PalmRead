@@ -327,8 +327,43 @@ public class VideoFragmentDetail extends BaseFragment implements SwipeRefreshLay
             GetVideoResult data = (GetVideoResult)v.getTag();
             VideoHistoryDbUtils.insertDataVideoHistory(getContext(),data);
             JsoupParse.htmlParseString(data, mHandler);
+//            onGetUrl(data);
         }
     };
+
+//    private String onGetUrl(final GetVideoResult result){
+//        Thread t=new Thread(){
+//            @Override
+//            public void run() {
+//                super.run();
+//                HttpURLConnection httpURLConnection=null;
+//                try {
+//                    URL url=new URL(result.getUrl());
+//                    httpURLConnection= (HttpURLConnection) url.openConnection();
+//                    httpURLConnection.setRequestMethod("GET");
+//                    httpURLConnection.setConnectTimeout(8000);
+//                    httpURLConnection.setReadTimeout(8000);
+//                    httpURLConnection.connect();
+//                    String property = httpURLConnection.getRequestProperty("Request URL");
+//                    String requestMethod = httpURLConnection.getRequestMethod();
+////                    httpURLConnection.getRequestProperties();
+//                    String headerField = httpURLConnection.getHeaderField("Request URL");
+//                    String headerField1 = httpURLConnection.getHeaderField("Age");
+//                    Log.e("test", "run: property,requestMethod,headerField,headerField1"+property+","+requestMethod+","+headerField+","+headerField1 );
+//
+//                } catch (MalformedURLException e) {
+//                    e.printStackTrace();
+//                } catch (IOException e) {
+//                    httpURLConnection.disconnect();
+//                    e.printStackTrace();
+//                }
+//            }
+//        };
+//
+//        t.start();
+//
+//        return null;
+//    }
 
     class VideoHolder extends RecyclerView.ViewHolder {
 

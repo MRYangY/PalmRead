@@ -1,6 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        PalmRead {
+            keyAlias 'key0'
+            keyPassword 'yangyuapp'
+            storeFile file('/Users/yangyu/Desktop/PalmReadKeyStore.jsk')
+            storePassword 'yangyuapp'
+        }
+    }
     compileSdkVersion 25
     buildToolsVersion "24.0.3"
     defaultConfig {
@@ -19,16 +27,20 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.PalmRead
         }
-    }
-    productFlavors {
-        flavor {
+        debug {
+            signingConfig signingConfigs.PalmRead
         }
     }
     sourceSets {
         main {
             jniLibs.srcDirs = ['libs']
         }
+    }
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
     }
 }
 
@@ -46,4 +58,19 @@ dependencies {
     compile 'org.jsoup:jsoup:1.10.2'
     testCompile 'junit:junit:4.12'
     compile project(':vitamio')
+    compile files('libs/MobCommons-2017.0216.1054.jar')
+    compile files('libs/MobTools-2017.0216.1054.jar')
+    compile files('libs/ShareSDK-Core-2.8.1.jar')
+    compile files('libs/ShareSDK-Email-2.8.1.jar')
+    compile files('libs/ShareSDK-Facebook-2.8.1.jar')
+    compile files('libs/ShareSDK-QQ-2.8.1.jar')
+    compile files('libs/ShareSDK-QZone-2.8.1.jar')
+    compile files('libs/ShareSDK-ShortMessage-2.8.1.jar')
+    compile files('libs/ShareSDK-SinaWeibo-2.8.1.jar')
+    compile files('libs/ShareSDK-TencentWeibo-2.8.1.jar')
+    compile files('libs/ShareSDK-Twitter-2.8.1.jar')
+    compile files('libs/ShareSDK-Wechat-2.8.1.jar')
+    compile files('libs/ShareSDK-Wechat-Core-2.8.1.jar')
+    compile files('libs/ShareSDK-Wechat-Favorite-2.8.1.jar')
+    compile files('libs/ShareSDK-Wechat-Moments-2.8.1.jar')
 }

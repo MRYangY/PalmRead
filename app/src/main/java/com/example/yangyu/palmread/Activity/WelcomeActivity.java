@@ -11,6 +11,8 @@ import com.example.yangyu.palmread.R;
 
 import java.lang.ref.WeakReference;
 
+import cn.sharesdk.framework.ShareSDK;
+
 /**
  * Created by yangyu on 17/3/10.
  */
@@ -42,6 +44,7 @@ public class WelcomeActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+        ShareSDK.initSDK(this);
         myHandler.postDelayed(runnable,3000);
     }
 

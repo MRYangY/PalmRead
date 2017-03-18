@@ -15,6 +15,7 @@ import com.example.yangyu.palmread.Activity.VideoDetailActivity;
 import com.example.yangyu.palmread.Constant.ProjectContent;
 import com.example.yangyu.palmread.Models.GetVideoResult;
 import com.example.yangyu.palmread.R;
+import com.example.yangyu.palmread.Util.CommonUtils;
 import com.example.yangyu.palmread.Util.ToastUtils;
 import com.example.yangyu.palmread.Util.VideoCollectDbUtils;
 import com.example.yangyu.palmread.Util.VideoHistoryDbUtils;
@@ -81,7 +82,7 @@ public class VideoItemBottom extends RelativeLayout implements View.OnClickListe
                                 }
                                 break;
                             case R.id.share:
-                                ToastUtils.TipToast(getContext(),"分享");
+                                CommonUtils.showShare((GetVideoResult)v.getTag(),getContext());
                                 break;
                         }
                         return false;

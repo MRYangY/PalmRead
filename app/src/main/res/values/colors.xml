@@ -5,4 +5,5 @@
     <color name="colorAccent">#FF4081</color>
     <color name="item_press">#e0e0e0</color>
     <color name="item_normal">#ffffff</color>
+    <color name="welcome_status_bar">#90d4d0</color>
 </resources>
