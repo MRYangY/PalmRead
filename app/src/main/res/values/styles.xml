@@ -27,4 +27,11 @@
     <style name="TabLayoutTextStyle" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textSize">@dimen/tablayout_size</item>
     </style>
+
+    <style name="popAnimStyle">
+        <item name="android:windowEnterAnimation">@anim/pop_come_in</item>
+        <item name="android:windowExitAnimation">@anim/pop_come_out</item>
+    </style>
+        
+
 </resources>

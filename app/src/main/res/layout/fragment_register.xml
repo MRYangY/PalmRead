@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:padding="5dp"
+        android:background="@drawable/register_selector"
+        app:civ_border_color="#fff"
+        app:civ_border_width="2dp"
+        android:layout_marginRight="10dp"/>
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toLeftOf="@id/register"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingLeft="30dp"
+        android:paddingTop="10dp">
+
+        <EditText
+            android:id="@+id/person_account"
+            android:layout_width="215dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/editer_shape"
+            android:hint="请输入账号"
+            android:padding="5dp" />
+
+        <EditText
+            android:id="@+id/person_password"
+            android:layout_width="215dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/editer_shape"
+            android:hint="请输入密码"
+            android:inputType="textPassword"
+            android:padding="5dp" />
+
+        <EditText
+            android:id="@+id/person_re_password"
+            android:layout_width="215dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/editer_shape"
+            android:hint="请确认密码"
+            android:inputType="textPassword"
+            android:padding="5dp" />
+    </LinearLayout>
+
+
+</RelativeLayout>

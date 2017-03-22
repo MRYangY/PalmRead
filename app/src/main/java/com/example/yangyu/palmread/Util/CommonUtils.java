@@ -1,9 +1,18 @@
 package com.example.yangyu.palmread.Util;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Environment;
 
 import com.example.yangyu.palmread.Models.GetHomePageresult;
 import com.example.yangyu.palmread.Models.GetVideoResult;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.onekeyshare.OnekeyShare;
@@ -145,5 +154,36 @@ public class CommonUtils {
             }
         });
         oks.show(context);
+    }
+
+    public static void saveMyBitmap(Bitmap mBitmap, String bitName)  {
+        File f = new File( Environment.getExternalStorageDirectory(),bitName + ".jpg");
+        FileOutputStream fOut = null;
+        try {
+            fOut = new FileOutputStream(f);
+            mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
+            if (fOut!=null) {
+                fOut.flush();
+                fOut.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static Bitmap restoreBitmap(String bitName){
+        Bitmap bt=null;
+        try {
+            FileInputStream is=new FileInputStream(new File(Environment.getExternalStorageDirectory(),bitName+".jpg"));
+            bt = BitmapFactory.decodeStream(is);
+            is.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bt;
     }
 }

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/setting_top"
+        layout="@layout/topbar" />
+
+    <LinearLayout
+        android:id="@+id/photo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/item_click_selector">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="8dp"
+            android:text="头像"
+            android:textColor="#000"
+            android:textSize="22dp" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/editer_photo"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/user_photo"
+            app:civ_border_color="#fff"
+            app:civ_border_width="1dp" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+
+    <LinearLayout
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/item_click_selector">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="8dp"
+            android:text="用户名"
+            android:textColor="#000"
+            android:textSize="22dp" />
+
+        <TextView
+            android:id="@+id/info_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="张三"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="18sp"
+            android:layout_marginRight="8dp"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+
+
+    <LinearLayout
+        android:id="@+id/jieshao"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/item_click_selector">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="8dp"
+            android:text="介绍"
+            android:textColor="#000"
+            android:textSize="22dp" />
+
+        <TextView
+            android:id="@+id/info_introduce"
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+            android:text="只愿得一人心"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="18sp"
+            android:gravity="end"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:layout_marginRight="8dp"/>
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

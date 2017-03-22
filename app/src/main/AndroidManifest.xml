@@ -52,6 +52,8 @@
             android:theme="@style/PersonCollectTheme"/>
         <activity android:name=".Activity.HomePageActivity"
             android:theme="@style/MainActivityTheme"/>
+        <activity android:name=".Activity.EditerUserInfoActivity"
+            android:theme="@style/PersonCollectTheme"/>
 
         <activity
             android:name="com.mob.tools.MobUIShell"
