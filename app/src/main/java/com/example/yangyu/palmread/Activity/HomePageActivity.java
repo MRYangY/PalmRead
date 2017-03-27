@@ -82,6 +82,7 @@ public class HomePageActivity extends AppCompatActivity implements BottomNavigat
         super.onResume();
         if (isToPerson){
             mBottonMenu.selectTab(2);
+            isToPerson=false;
         }
     }
 
@@ -170,7 +171,7 @@ public class HomePageActivity extends AppCompatActivity implements BottomNavigat
             switch (keyCode){
                 case KeyEvent.KEYCODE_BACK:
                     if (!isLogout) {
-                        ToastUtils.TipToast(this, "再按一次退出应用！！");
+                        ToastUtils.TipToast(this,getString(R.string.exit_app));
                         isLogout=true;
                         mHandler.sendEmptyMessageDelayed(0,3000);
                         return false;

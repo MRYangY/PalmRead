@@ -47,6 +47,13 @@ public class VideoHistoryDbUtils {
         readableDatabase.delete("VideoHistory", where, null);
     }
 
+    public static void deleteAllDataVideoHistory(Context context) {
+        MySqlOpenHelper helper = new MySqlOpenHelper(context, TAB_VIDEO_HISTORY_NAME, null, 1);
+        SQLiteDatabase readableDatabase = helper.getWritableDatabase();
+//        String where = "click_url" + "='" + data.getUrl() + "'";
+        readableDatabase.delete("deoHistory", null, null);
+    }
+
     public static Cursor quaryDataVideoHistory(Context context) {
         MySqlOpenHelper helper = new MySqlOpenHelper(context, TAB_VIDEO_HISTORY_NAME, null, 1);
         SQLiteDatabase readableDatabase = helper.getReadableDatabase();

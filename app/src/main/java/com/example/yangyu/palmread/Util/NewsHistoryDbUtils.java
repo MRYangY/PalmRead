@@ -45,6 +45,13 @@ public class NewsHistoryDbUtils {
         readableDatabase.delete("NewsHistory", where, null);
     }
 
+    public static void deleteAllDataNewCollect(Context context) {
+        MySqlOpenHelper helper = new MySqlOpenHelper(context, TAB_NEW_HISTORY_NAME, null, 1);
+        SQLiteDatabase readableDatabase = helper.getWritableDatabase();
+//        String where = "link_url" + "='" + data.mContent + "'";
+        readableDatabase.delete("NewsHistory", null, null);
+    }
+
     public static Cursor quaryDataNewHistory(Context context) {
         MySqlOpenHelper helper = new MySqlOpenHelper(context, TAB_NEW_HISTORY_NAME, null, 1);
         SQLiteDatabase readableDatabase = helper.getReadableDatabase();

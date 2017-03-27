@@ -47,6 +47,13 @@ public class VideoCollectDbUtils {
         readableDatabase.delete("VideoCollect", where, null);
     }
 
+    public static void deleteAllDataVideoCollect(Context context) {
+        MySqlOpenHelper helper = new MySqlOpenHelper(context, TAB_VIDEO_COLLECT_NAME, null, 1);
+        SQLiteDatabase readableDatabase = helper.getWritableDatabase();
+//        String where = "click_url" + "='" + data.getUrl() + "'";
+        readableDatabase.delete("VideoCollect", null, null);
+    }
+
     public static Cursor quaryDataVideoCollect(Context context) {
         MySqlOpenHelper helper = new MySqlOpenHelper(context, TAB_VIDEO_COLLECT_NAME, null, 1);
         SQLiteDatabase readableDatabase = helper.getReadableDatabase();

@@ -22,5 +22,15 @@
         android:text="dalianbao"
         android:textSize="16sp"
         android:textColor="#000"/>
+
+    <ImageView
+        android:id="@+id/menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/menu"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:padding="5dp"
+        android:visibility="invisible"/>
 </RelativeLayout>
 
