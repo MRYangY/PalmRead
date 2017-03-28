@@ -51,7 +51,7 @@ public class VideoHistoryDbUtils {
         MySqlOpenHelper helper = new MySqlOpenHelper(context, TAB_VIDEO_HISTORY_NAME, null, 1);
         SQLiteDatabase readableDatabase = helper.getWritableDatabase();
 //        String where = "click_url" + "='" + data.getUrl() + "'";
-        readableDatabase.delete("deoHistory", null, null);
+        readableDatabase.delete("VideoHistory", null, null);
     }
 
     public static Cursor quaryDataVideoHistory(Context context) {
