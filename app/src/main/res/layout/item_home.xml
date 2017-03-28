@@ -6,6 +6,7 @@
     android:layout_gravity="center_vertical"
     android:orientation="vertical"
     android:padding="8dp"
+    android:background="?android:attr/selectableItemBackground"
     >
 
     <TextView
