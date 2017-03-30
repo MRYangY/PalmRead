@@ -1,12 +1,17 @@
 package com.example.yangyu.palmread.Activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
@@ -23,6 +28,7 @@ import com.example.yangyu.palmread.Fragment.EditerUserProfireDialog;
 import com.example.yangyu.palmread.R;
 import com.example.yangyu.palmread.Util.CommonUtils;
 import com.example.yangyu.palmread.Util.SharePreferenceUtils;
+import com.example.yangyu.palmread.Util.ToastUtils;
 
 import java.io.File;
 
@@ -165,14 +171,13 @@ public class EditerUserInfoActivity extends AppCompatActivity implements EditerU
     private View.OnClickListener popCameraListener=new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Intent openCameraIntent = new Intent(
-                    MediaStore.ACTION_IMAGE_CAPTURE);
-            tempUri = Uri.fromFile(new File(Environment
-                    .getExternalStorageDirectory(), "image.jpg"));
-            // 指定照片保存路径（SD卡），image.jpg为一个临时文件，每次拍照后这个图片都会被替换
-            openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, tempUri);
-            startActivityForResult(openCameraIntent, TAKE_PICTURE);
-            popupWindow.dismiss();
+            if (ContextCompat.checkSelfPermission(EditerUserInfoActivity.this
+                    , Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED){
+                ActivityCompat.requestPermissions(EditerUserInfoActivity.this
+                        ,new String[]{Manifest.permission.CAMERA},1);
+            }else {
+                goCamara();
+            }
         }
     };
 
@@ -186,6 +191,17 @@ public class EditerUserInfoActivity extends AppCompatActivity implements EditerU
             popupWindow.dismiss();
         }
     };
+
+    private void goCamara() {
+        Intent openCameraIntent = new Intent(
+                MediaStore.ACTION_IMAGE_CAPTURE);
+        tempUri = Uri.fromFile(new File(Environment
+                .getExternalStorageDirectory(), "image.jpg"));
+        // 指定照片保存路径（SD卡），image.jpg为一个临时文件，每次拍照后这个图片都会被替换
+        openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, tempUri);
+        startActivityForResult(openCameraIntent, TAKE_PICTURE);
+        popupWindow.dismiss();
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -204,6 +220,20 @@ public class EditerUserInfoActivity extends AppCompatActivity implements EditerU
                     }
                     break;
             }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode){
+            case 1:
+                if (grantResults.length>0&&grantResults[0]==PackageManager.PERMISSION_GRANTED){
+                    goCamara();
+                }else {
+                    ToastUtils.TipToast(EditerUserInfoActivity.this,"你拒绝了相机权限");
+                }
+                break;
         }
     }
 
