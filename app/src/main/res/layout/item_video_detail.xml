@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="230dp"
             android:visibility="visible"
-            fresco:placeholderImage="@mipmap/ic_launcher"/>
+            fresco:placeholderImage="@drawable/load_default"/>
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/play_pause"

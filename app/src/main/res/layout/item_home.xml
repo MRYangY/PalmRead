@@ -31,7 +31,7 @@
             android:layout_width="0dp"
             android:layout_height="90dp"
             android:layout_weight="1"
-            fresco:placeholderImage="@mipmap/ic_launcher"
+            fresco:placeholderImage="@drawable/load_default"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="4dp"/>
 
@@ -40,7 +40,7 @@
             android:layout_width="0dp"
             android:layout_height="90dp"
             android:layout_weight="1"
-            fresco:placeholderImage="@mipmap/ic_launcher"
+            fresco:placeholderImage="@drawable/load_default"
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp"
             />
@@ -50,7 +50,7 @@
             android:layout_width="0dp"
             android:layout_height="90dp"
             android:layout_weight="1"
-            fresco:placeholderImage="@mipmap/ic_launcher"
+            fresco:placeholderImage="@drawable/load_default"
             android:layout_marginLeft="4dp"
             android:layout_marginRight="5dp"/>
     </LinearLayout>
