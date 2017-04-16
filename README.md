@@ -7,3 +7,5 @@
 ![image](https://github.com/MRYangY/PalmRead/blob/master/app/src/main/res/drawable-xxxhdpi/screenshot4.jpg)![image](https://github.com/MRYangY/PalmRead/blob/master/app/src/main/res/drawable-xxxhdpi/screenshot5.jpg)![image](https://github.com/MRYangY/PalmRead/blob/master/app/src/main/res/drawable-xxxhdpi/screenshot6.jpg)
 
 ![image](https://github.com/MRYangY/PalmRead/blob/master/app/src/main/res/drawable-xxxhdpi/screenshot7.jpg)![image](https://github.com/MRYangY/PalmRead/blob/master/app/src/main/res/drawable-xxxhdpi/screenshot8.jpg)![image](https://github.com/MRYangY/PalmRead/blob/master/app/src/main/res/drawable-xxxhdpi/screenshot9.jpg)
+
+觉得还不错的，请给个star，thanks！
