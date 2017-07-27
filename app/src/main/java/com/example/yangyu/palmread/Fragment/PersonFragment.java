@@ -19,9 +19,13 @@ import com.example.yangyu.palmread.Activity.PersonCollectActivity;
 import com.example.yangyu.palmread.Activity.PersonHistoryActivity;
 import com.example.yangyu.palmread.Base.BaseFragment;
 import com.example.yangyu.palmread.Constant.ProjectContent;
+import com.example.yangyu.palmread.Models.GetQQUserInfo;
 import com.example.yangyu.palmread.R;
 import com.example.yangyu.palmread.Util.SharePreferenceUtils;
 import com.example.yangyu.palmread.Util.ToastUtils;
+import com.tencent.tauth.Tencent;
+
+import static com.example.yangyu.palmread.Constant.ProjectContent.mAppid;
 
 /**
  * Created by yangyu on 2017/1/9.
@@ -50,7 +54,13 @@ public class PersonFragment extends BaseFragment {
                     setFragment(new AccountLoginFragment());
                     break;
                 case ProjectContent.INTENT_LOGIN_OK:
-                    setFragment(new UserLoginedFragment());
+                    GetQQUserInfo info =(GetQQUserInfo) intent
+                            .getSerializableExtra(ProjectContent.EXTRA_QQ_USER_INFO);
+                    UserLoginedFragment fragment=new UserLoginedFragment();
+                    Bundle bundle=new Bundle();
+                    bundle.putSerializable(ProjectContent.EXTRA_QQ_USER_INFO,info);
+                    fragment.setArguments(bundle);
+                    setFragment(fragment);
                     break;
                 default:
                     break;
@@ -141,6 +151,12 @@ public class PersonFragment extends BaseFragment {
 //            intent.setAction(ProjectContent.INTENT_LOGOUT_OK);
 //            getContext().sendBroadcast(intent);
             setFragment(new AccountLoginFragment());
+            if (AccountLoginFragment.mTencent==null){
+                Tencent mTencent = Tencent.createInstance(mAppid, getActivity().getApplicationContext());
+                mTencent.logout(getActivity());
+            }else {
+                AccountLoginFragment.mTencent.logout(getActivity());
+            }
             ToastUtils.TipToast(getContext(),"已退出登录");
         }
     };
@@ -156,4 +172,14 @@ public class PersonFragment extends BaseFragment {
             ToastUtils.TipToast(getContext(),"当前已是最新版本！");
         }
     };
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Fragment fragment = getChildFragmentManager().findFragmentById(R.id.person_login);
+        if (fragment instanceof AccountLoginFragment){
+            AccountLoginFragment loginFragment=(AccountLoginFragment) fragment;
+            loginFragment.onActivityResult(requestCode,resultCode,data);
+        }
+    }
 }

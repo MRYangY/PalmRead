@@ -3,6 +3,7 @@ package com.example.yangyu.palmread.Logic;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONType;
 import com.example.yangyu.palmread.Models.GetHomePageresult;
+import com.example.yangyu.palmread.Models.GetQQUserInfo;
 import com.example.yangyu.palmread.Models.GetVideoResult;
 
 import java.util.ArrayList;
@@ -26,6 +27,12 @@ public class HomeJsonToResult {
     public static ArrayList<GetVideoResult> VideoResultParse(Class clazz,String result){
         Object object= JSON.parseArray(result,clazz);
         if(object!=null)return (ArrayList<GetVideoResult>)object;
+        return null;
+    }
+
+    public static GetQQUserInfo QQUserInfoParse(Class clazz,String result){
+        Object o = JSON.parseObject(result, clazz);
+        if (o!=null) return (GetQQUserInfo)o;
         return null;
     }
 }

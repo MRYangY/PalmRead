@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -35,6 +36,8 @@ public class HomePageActivity extends AppCompatActivity implements BottomNavigat
     public BottomNavigationBar mBottonMenu;
     private static boolean isLogout=false;
     private boolean isToPerson=false;
+    private FragmentManager fm;
+
     private static final class MyHandler extends Handler{
         private final WeakReference<HomePageActivity> mActivity;
 
@@ -117,11 +120,11 @@ public class HomePageActivity extends AppCompatActivity implements BottomNavigat
 
     @Override
     public void onTabSelected(int position) {
-        FragmentManager fm=this.getSupportFragmentManager();
+        fm = this.getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         switch(position){
             case 0:
-                HomeCollectionFragment mHomeCollectionFragment=(HomeCollectionFragment)fm
+                HomeCollectionFragment mHomeCollectionFragment=(HomeCollectionFragment) fm
                         .findFragmentByTag(HomeCollectionFragment.TAG);
                 if(mHomeCollectionFragment==null){
                     mHomeCollectionFragment=new HomeCollectionFragment();
@@ -129,14 +132,14 @@ public class HomePageActivity extends AppCompatActivity implements BottomNavigat
                 ft.replace(R.id.content,mHomeCollectionFragment,HomeCollectionFragment.TAG);
                 break;
             case 1:
-                VideoFragment mVideofragment=(VideoFragment)fm.findFragmentByTag(VideoFragment.TAG);
+                VideoFragment mVideofragment=(VideoFragment) fm.findFragmentByTag(VideoFragment.TAG);
                 if(mVideofragment==null){
                     mVideofragment=new VideoFragment();
                 }
                 ft.replace(R.id.content,mVideofragment,VideoFragment.TAG);
                 break;
             case 2:
-                PersonFragment mPersonFragment=(PersonFragment)fm.findFragmentByTag(PersonFragment.TAG);
+                PersonFragment mPersonFragment=(PersonFragment) fm.findFragmentByTag(PersonFragment.TAG);
                 if(mPersonFragment==null){
                     mPersonFragment=new PersonFragment();
                 }
@@ -204,4 +207,15 @@ public class HomePageActivity extends AppCompatActivity implements BottomNavigat
 //        });
 //        builder.show();
 //    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Fragment fragment =  fm.findFragmentById(R.id.content);
+        if (fragment instanceof PersonFragment){
+            PersonFragment pf=(PersonFragment) fragment;
+            pf.onActivityResult(requestCode,resultCode,data);
+        }
+    }
 }

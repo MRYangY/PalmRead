@@ -23,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.yangyu.palmread.Constant.ProjectContent;
 import com.example.yangyu.palmread.Fragment.EditerUserProfireDialog;
 import com.example.yangyu.palmread.R;
@@ -38,7 +39,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * Created by yangyu on 17/3/18.
  */
 
-public class EditerUserInfoActivity extends AppCompatActivity implements EditerUserProfireDialog.DialogFragmentDataImp{
+public class EditerUserInfoActivity extends AppCompatActivity implements EditerUserProfireDialog.DialogFragmentDataImp {
 
     private View settingTop;
     private ImageView back;
@@ -72,24 +73,25 @@ public class EditerUserInfoActivity extends AppCompatActivity implements EditerU
         initData();
     }
 
-    private void initData(){
+    private void initData() {
         editor.setText("编辑资料");
-        Bitmap avatar = CommonUtils.restoreBitmap("user_avatar");
-        if (avatar!=null){
-            editorPhoto.setImageBitmap(avatar);
-        }else {
+//        Bitmap avatar = CommonUtils.restoreBitmap("user_avatar");
+        String sinfoPic = SharePreferenceUtils.getStringData(this, ProjectContent.USER_INFO_PIC);
+        if (sinfoPic != null) {
+            Glide.with(this).load(sinfoPic).into(editorPhoto);
+        } else {
             editorPhoto.setBackgroundResource(R.drawable.user_photo);
         }
-        String sinfoName= SharePreferenceUtils.getStringData(EditerUserInfoActivity.this,ProjectContent.USER_INFO_NAME);
-        String sinfoIntroduce=SharePreferenceUtils.getStringData(EditerUserInfoActivity.this,ProjectContent.USER_INFO_INTRODUCE);
-        if (sinfoName!=null){
+        String sinfoName = SharePreferenceUtils.getStringData(EditerUserInfoActivity.this, ProjectContent.USER_INFO_NAME);
+        String sinfoIntroduce = SharePreferenceUtils.getStringData(EditerUserInfoActivity.this, ProjectContent.USER_INFO_INTRODUCE);
+        if (sinfoName != null) {
             infoName.setText(sinfoName);
-        }else {
+        } else {
             infoName.setText("--");
         }
-        if (sinfoIntroduce!=null){
+        if (sinfoIntroduce != null) {
             infoIntroduce.setText(sinfoIntroduce);
-        }else{
+        } else {
             infoIntroduce.setText("--");
         }
         back.setOnClickListener(mBackListener);
@@ -98,43 +100,42 @@ public class EditerUserInfoActivity extends AppCompatActivity implements EditerU
         photo.setOnClickListener(mAvatorListener);
     }
 
-    private View.OnClickListener mBackListener=new View.OnClickListener() {
+    private View.OnClickListener mBackListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             finish();
         }
     };
 
-    private View.OnClickListener mNameListener=new View.OnClickListener() {
+    private View.OnClickListener mNameListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             showEditDialog("name");
         }
     };
 
-    private View.OnClickListener mIntroduceListener=new View.OnClickListener() {
+    private View.OnClickListener mIntroduceListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             showEditDialog("introduce");
         }
     };
 
-    private View.OnClickListener mAvatorListener=new View.OnClickListener() {
+    private View.OnClickListener mAvatorListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             showPop();
         }
     };
 
-    public void showEditDialog(String type)
-    {
+    public void showEditDialog(String type) {
         android.support.v4.app.FragmentTransaction mFragTransaction = getSupportFragmentManager().beginTransaction();
-        android.support.v4.app.Fragment fragment =  getSupportFragmentManager().findFragmentByTag("dialogFragment");
-        if(fragment!=null){
+        android.support.v4.app.Fragment fragment = getSupportFragmentManager().findFragmentByTag("dialogFragment");
+        if (fragment != null) {
             //为了不重复显示dialog，在显示对话框之前移除正在显示的对话框
             mFragTransaction.remove(fragment);
         }
-        EditerUserProfireDialog dialogFragment =EditerUserProfireDialog.newInstance(type);
+        EditerUserProfireDialog dialogFragment = EditerUserProfireDialog.newInstance(type);
         dialogFragment.show(mFragTransaction, "dialogFragment");//显示一个Fragment并且给该Fragment添加一个Tag，可通过findFragmentByTag找到该Fragment
     }
 
@@ -142,13 +143,13 @@ public class EditerUserInfoActivity extends AppCompatActivity implements EditerU
     @Override
     public void setInfoName(String message) {
         infoName.setText(message);
-        SharePreferenceUtils.setStringData(EditerUserInfoActivity.this,message, ProjectContent.USER_INFO_NAME);
+        SharePreferenceUtils.setStringData(EditerUserInfoActivity.this, message, ProjectContent.USER_INFO_NAME);
     }
 
     @Override
     public void setInfoIntroduce(String message) {
         infoIntroduce.setText(message);
-        SharePreferenceUtils.setStringData(EditerUserInfoActivity.this,message, ProjectContent.USER_INFO_INTRODUCE);
+        SharePreferenceUtils.setStringData(EditerUserInfoActivity.this, message, ProjectContent.USER_INFO_INTRODUCE);
     }
 
     public void showPop() {
@@ -168,20 +169,20 @@ public class EditerUserInfoActivity extends AppCompatActivity implements EditerU
         popupWindow.showAtLocation(rootview, Gravity.BOTTOM, 0, 0);
     }
 
-    private View.OnClickListener popCameraListener=new View.OnClickListener() {
+    private View.OnClickListener popCameraListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             if (ContextCompat.checkSelfPermission(EditerUserInfoActivity.this
-                    , Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED){
+                    , Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(EditerUserInfoActivity.this
-                        ,new String[]{Manifest.permission.CAMERA},1);
-            }else {
+                        , new String[]{Manifest.permission.CAMERA}, 1);
+            } else {
                 goCamara();
             }
         }
     };
 
-    private View.OnClickListener popPhotoListener=new View.OnClickListener() {
+    private View.OnClickListener popPhotoListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             Intent openAlbumIntent = new Intent(
@@ -226,12 +227,12 @@ public class EditerUserInfoActivity extends AppCompatActivity implements EditerU
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode){
+        switch (requestCode) {
             case 1:
-                if (grantResults.length>0&&grantResults[0]==PackageManager.PERMISSION_GRANTED){
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     goCamara();
-                }else {
-                    ToastUtils.TipToast(EditerUserInfoActivity.this,"你拒绝了相机权限");
+                } else {
+                    ToastUtils.TipToast(EditerUserInfoActivity.this, "你拒绝了相机权限");
                 }
                 break;
         }
@@ -263,7 +264,6 @@ public class EditerUserInfoActivity extends AppCompatActivity implements EditerU
 
     /**
      * 保存裁剪之后的图片数据
-     *
      */
     protected void setImageToView(Intent data) {
         Bundle extras = data.getExtras();
@@ -271,7 +271,7 @@ public class EditerUserInfoActivity extends AppCompatActivity implements EditerU
             Bitmap photo = extras.getParcelable("data");
 //            photo = Utils.toRoundBitmap(photo); // 这个时候的图片已经被处理成圆形的了
             editorPhoto.setImageBitmap(photo);
-            CommonUtils.saveMyBitmap(photo,"user_avatar");
+            CommonUtils.saveMyBitmap(photo, "user_avatar");
         }
     }
 }

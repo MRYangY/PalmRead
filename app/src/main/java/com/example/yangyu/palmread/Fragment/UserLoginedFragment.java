@@ -16,9 +16,11 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.yangyu.palmread.Activity.EditerUserInfoActivity;
 import com.example.yangyu.palmread.Base.BaseFragment;
 import com.example.yangyu.palmread.Constant.ProjectContent;
+import com.example.yangyu.palmread.Models.GetQQUserInfo;
 import com.example.yangyu.palmread.R;
 import com.example.yangyu.palmread.Util.CommonUtils;
 import com.example.yangyu.palmread.Util.SharePreferenceUtils;
@@ -46,11 +48,12 @@ public class UserLoginedFragment extends BaseFragment {
     protected static final int TAKE_PICTURE = 1;
     private static final int CROP_SMALL_PICTURE = 2;
     protected static Uri tempUri;
+    private GetQQUserInfo mInfo;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mLayout = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_user_logined,null);
+        mLayout = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_user_logined, null);
         return mLayout;
     }
 
@@ -65,40 +68,63 @@ public class UserLoginedFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        String sinfoName= SharePreferenceUtils.getStringData(getActivity(), ProjectContent.USER_INFO_NAME);
-        String sinfoIntroduce=SharePreferenceUtils.getStringData(getActivity(),ProjectContent.USER_INFO_INTRODUCE);
-        if (sinfoName!=null){
+        updataInfo();
+    }
+
+    private void updataInfo() {
+        String sinfoName = SharePreferenceUtils.getStringData(getActivity(), ProjectContent.USER_INFO_NAME);
+        String sinfoPic = SharePreferenceUtils.getStringData(getActivity(), ProjectContent.USER_INFO_PIC);
+        String sinfoIntroduce = SharePreferenceUtils.getStringData(getActivity(), ProjectContent.USER_INFO_INTRODUCE);
+        if (sinfoName != null) {
             userName.setText(sinfoName);
-        }else {
+        } else {
             userName.setText("--");
         }
-        if (sinfoIntroduce!=null){
+        if (sinfoPic != null) {
+            Glide.with(this).load(sinfoPic).into(userIcon);
+        } else {
+            userIcon.setBackgroundResource(R.drawable.user_photo);
+        }
+        if (sinfoIntroduce != null) {
             userSignature.setText(sinfoIntroduce);
-        }else{
+        } else {
             userSignature.setText("--");
         }
     }
 
     @Override
     protected void initData() {
-        Bitmap bmp=CommonUtils.restoreBitmap("user_avatar");
-        if (bmp!=null){
-            userIcon.setImageBitmap(bmp);
-        }else {
-            userIcon.setBackgroundResource(R.drawable.user_photo);
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            mInfo = (GetQQUserInfo) arguments.getSerializable(ProjectContent.EXTRA_QQ_USER_INFO);
+//        Bitmap bmp=CommonUtils.restoreBitmap("user_avatar");
+//        if (bmp!=null){
+//            userIcon.setImageBitmap(bmp);
+//        }else {
+//            userIcon.setBackgroundResource(R.drawable.user_photo);
+//        }
+            if (mInfo != null) {
+                Glide.with(this).load(mInfo.getFigureurl_qq_2()).into(userIcon);
+                userName.setText(mInfo.getNickname());
+
+            } else {
+                userIcon.setBackgroundResource(R.drawable.user_photo);
+                userName.setText("--");
+            }
         }
         mSetting.setOnClickListener(mSettingListener);
         userIcon.setOnClickListener(mUserIconListener);
     }
-    private View.OnClickListener mSettingListener=new View.OnClickListener() {
+
+    private View.OnClickListener mSettingListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Intent intent=new Intent(getActivity(), EditerUserInfoActivity.class);
+            Intent intent = new Intent(getActivity(), EditerUserInfoActivity.class);
             startActivity(intent);
         }
     };
 
-    private View.OnClickListener mUserIconListener=new View.OnClickListener() {
+    private View.OnClickListener mUserIconListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             showPop();
@@ -122,7 +148,7 @@ public class UserLoginedFragment extends BaseFragment {
         popupWindow.showAtLocation(rootview, Gravity.BOTTOM, 0, 0);
     }
 
-    private View.OnClickListener popCameraListener=new View.OnClickListener() {
+    private View.OnClickListener popCameraListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             Intent openCameraIntent = new Intent(
@@ -136,7 +162,7 @@ public class UserLoginedFragment extends BaseFragment {
         }
     };
 
-    private View.OnClickListener popPhotoListener=new View.OnClickListener() {
+    private View.OnClickListener popPhotoListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             Intent openAlbumIntent = new Intent(
@@ -148,7 +174,7 @@ public class UserLoginedFragment extends BaseFragment {
     };
 
     @Override
-     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) { // 如果返回码是可以用的
             switch (requestCode) {
@@ -193,7 +219,6 @@ public class UserLoginedFragment extends BaseFragment {
 
     /**
      * 保存裁剪之后的图片数据
-     *
      */
     protected void setImageToView(Intent data) {
         Bundle extras = data.getExtras();
@@ -201,7 +226,7 @@ public class UserLoginedFragment extends BaseFragment {
             Bitmap photo = extras.getParcelable("data");
 //            photo = Utils.toRoundBitmap(photo); // 这个时候的图片已经被处理成圆形的了
             userIcon.setImageBitmap(photo);
-            CommonUtils.saveMyBitmap(photo,"user_avatar");
+            CommonUtils.saveMyBitmap(photo, "user_avatar");
 //            uploadPic(photo);
         }
     }
