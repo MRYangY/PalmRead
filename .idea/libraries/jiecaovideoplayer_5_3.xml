@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="jiecaovideoplayer-5.3">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/exploded-aar/fm.jiecao/jiecaovideoplayer/5.3/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/app/build/intermediates/exploded-aar/fm.jiecao/jiecaovideoplayer/5.3/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/fm.jiecao/jiecaovideoplayer/5.3/d84ad89f7810f8227ad15ea5c5a8c065978ec5fc/jiecaovideoplayer-5.3-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

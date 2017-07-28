@@ -15,6 +15,6 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="60dp"
-        android:text="掌上新闻v3.1" />
+        android:text="掌上新闻v1.0" />
 
 </RelativeLayout>
