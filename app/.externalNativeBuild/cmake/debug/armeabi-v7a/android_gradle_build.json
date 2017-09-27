@@ -1,0 +1,38 @@
+
+{
+	"buildFiles" : [ "/Users/yangyu/AndroidProject/PalmRead/app/CMakeLists.txt" ],
+	"cFileExtensions" : [ "c" ],
+	"cleanCommands" : 
+	[
+		"/Users/yangyu/Library/Android/sdk/cmake/3.6.3155560/bin/cmake --build /Users/yangyu/AndroidProject/PalmRead/app/.externalNativeBuild/cmake/debug/armeabi-v7a --target clean"
+	],
+	"libraries" : 
+	{
+		"palmread-lib-Debug-armeabi-v7a" : 
+		{
+			"abi" : "armeabi-v7a",
+			"artifactName" : "palmread-lib",
+			"buildCommand" : "/Users/yangyu/Library/Android/sdk/cmake/3.6.3155560/bin/cmake --build /Users/yangyu/AndroidProject/PalmRead/app/.externalNativeBuild/cmake/debug/armeabi-v7a --target palmread-lib",
+			"buildType" : "debug",
+			"files" : 
+			[
+				
+				{
+					"flags" : "  --target=armv7-none-linux-androideabi --gcc-toolchain=/Users/yangyu/Library/Android/sdk/ndk-bundle/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64 --sysroot=/Users/yangyu/Library/Android/sdk/ndk-bundle/sysroot -Dpalmread_lib_EXPORTS  -isystem /Users/yangyu/Library/Android/sdk/ndk-bundle/sysroot/usr/include/arm-linux-androideabi -D__ANDROID_API__=19 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fno-integrated-as -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC      -c ",
+					"src" : "/Users/yangyu/AndroidProject/PalmRead/app/src/main/cpp/palmread-lib.c",
+					"workingDirectory" : "/Users/yangyu/AndroidProject/PalmRead/app/.externalNativeBuild/cmake/debug/armeabi-v7a"
+				}
+			],
+			"output" : "/Users/yangyu/AndroidProject/PalmRead/app/build/intermediates/cmake/debug/obj/armeabi-v7a/libpalmread-lib.so",
+			"toolchain" : "618456133490305594"
+		}
+	},
+	"toolchains" : 
+	{
+		"618456133490305594" : 
+		{
+			"cCompilerExecutable" : "/Users/yangyu/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang",
+			"cppCompilerExecutable" : "/Users/yangyu/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++"
+		}
+	}
+}

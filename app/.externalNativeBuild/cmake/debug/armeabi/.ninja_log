@@ -1,0 +1,17 @@
+# ninja log v5
+0	109	0	CMakeFiles/palmread-lib.dir/src/main/cpp/palmread-lib.c.o	19ed3c7821622be8
+110	200	0	../../../../build/intermediates/cmake/debug/obj/armeabi/libpalmread-lib.so	df5abc90f96f7213
+0	136	0	CMakeFiles/palmread-lib.dir/src/main/cpp/palmread-lib.c.o	19ed3c7821622be8
+136	277	0	../../../../build/intermediates/cmake/debug/obj/armeabi/libpalmread-lib.so	df5abc90f96f7213
+0	78	0	CMakeFiles/palmread-lib.dir/src/main/cpp/palmread-lib.c.o	19ed3c7821622be8
+78	149	0	../../../../build/intermediates/cmake/debug/obj/armeabi/libpalmread-lib.so	df5abc90f96f7213
+0	77	0	CMakeFiles/palmread-lib.dir/src/main/cpp/palmread-lib.c.o	19ed3c7821622be8
+77	146	0	../../../../build/intermediates/cmake/debug/obj/armeabi/libpalmread-lib.so	df5abc90f96f7213
+0	114	0	CMakeFiles/palmread-lib.dir/src/main/cpp/palmread-lib.c.o	19ed3c7821622be8
+114	194	0	../../../../build/intermediates/cmake/debug/obj/armeabi/libpalmread-lib.so	df5abc90f96f7213
+0	113	0	CMakeFiles/palmread-lib.dir/src/main/cpp/palmread-lib.c.o	19ed3c7821622be8
+113	185	0	../../../../build/intermediates/cmake/debug/obj/armeabi/libpalmread-lib.so	df5abc90f96f7213
+0	107	0	CMakeFiles/palmread-lib.dir/src/main/cpp/palmread-lib.c.o	19ed3c7821622be8
+107	182	0	../../../../build/intermediates/cmake/debug/obj/armeabi/libpalmread-lib.so	df5abc90f96f7213
+1	106	0	CMakeFiles/palmread-lib.dir/src/main/cpp/palmread-lib.c.o	19ed3c7821622be8
+106	174	0	../../../../build/intermediates/cmake/debug/obj/armeabi/libpalmread-lib.so	df5abc90f96f7213

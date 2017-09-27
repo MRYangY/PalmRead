@@ -20,6 +20,7 @@ import com.example.yangyu.palmread.Constant.ProjectContent;
 import com.example.yangyu.palmread.Fragment.HomeCollectionFragment;
 import com.example.yangyu.palmread.Fragment.PersonFragment;
 import com.example.yangyu.palmread.Fragment.VideoFragment;
+import com.example.yangyu.palmread.Logic.NdkHelper;
 import com.example.yangyu.palmread.R;
 import com.example.yangyu.palmread.Util.ToastUtils;
 
@@ -70,6 +71,7 @@ public class HomePageActivity extends AppCompatActivity implements BottomNavigat
         setContentView(R.layout.activity_home);
         mBottonMenu = (BottomNavigationBar)findViewById(R.id.bottom_navigation);
         initData();
+        ToastUtils.TipToast(this, NdkHelper.GetStringFromC("欢迎来到PalmRead"));
     }
 
     @Override

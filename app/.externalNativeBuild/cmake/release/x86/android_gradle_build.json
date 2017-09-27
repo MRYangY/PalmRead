@@ -1,0 +1,38 @@
+
+{
+	"buildFiles" : [ "/Users/yangyu/AndroidProject/PalmRead/app/CMakeLists.txt" ],
+	"cFileExtensions" : [ "c" ],
+	"cleanCommands" : 
+	[
+		"/Users/yangyu/Library/Android/sdk/cmake/3.6.3155560/bin/cmake --build /Users/yangyu/AndroidProject/PalmRead/app/.externalNativeBuild/cmake/release/x86 --target clean"
+	],
+	"libraries" : 
+	{
+		"palmread-lib-Release-x86" : 
+		{
+			"abi" : "x86",
+			"artifactName" : "palmread-lib",
+			"buildCommand" : "/Users/yangyu/Library/Android/sdk/cmake/3.6.3155560/bin/cmake --build /Users/yangyu/AndroidProject/PalmRead/app/.externalNativeBuild/cmake/release/x86 --target palmread-lib",
+			"buildType" : "release",
+			"files" : 
+			[
+				
+				{
+					"flags" : "  --target=i686-none-linux-android --gcc-toolchain=/Users/yangyu/Library/Android/sdk/ndk-bundle/toolchains/x86-4.9/prebuilt/darwin-x86_64 --sysroot=/Users/yangyu/Library/Android/sdk/ndk-bundle/sysroot -Dpalmread_lib_EXPORTS  -isystem /Users/yangyu/Library/Android/sdk/ndk-bundle/sysroot/usr/include/i686-linux-android -D__ANDROID_API__=19 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -mstackrealign -Wa,--noexecstack -Wformat -Werror=format-security  -O2 -DNDEBUG  -fPIC      -c ",
+					"src" : "/Users/yangyu/AndroidProject/PalmRead/app/src/main/cpp/palmread-lib.c",
+					"workingDirectory" : "/Users/yangyu/AndroidProject/PalmRead/app/.externalNativeBuild/cmake/release/x86"
+				}
+			],
+			"output" : "/Users/yangyu/AndroidProject/PalmRead/app/build/intermediates/cmake/release/obj/x86/libpalmread-lib.so",
+			"toolchain" : "618456133490305594"
+		}
+	},
+	"toolchains" : 
+	{
+		"618456133490305594" : 
+		{
+			"cCompilerExecutable" : "/Users/yangyu/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang",
+			"cppCompilerExecutable" : "/Users/yangyu/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++"
+		}
+	}
+}

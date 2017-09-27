@@ -1,0 +1,3 @@
+/Users/yangyu/AndroidProject/PalmRead/app/.externalNativeBuild/cmake/debug/armeabi/CMakeFiles/edit_cache.dir
+/Users/yangyu/AndroidProject/PalmRead/app/.externalNativeBuild/cmake/debug/armeabi/CMakeFiles/rebuild_cache.dir
+/Users/yangyu/AndroidProject/PalmRead/app/.externalNativeBuild/cmake/debug/armeabi/CMakeFiles/palmread-lib.dir

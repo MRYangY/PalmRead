@@ -1,0 +1,14 @@
+Executable : /Users/yangyu/Library/Android/sdk/cmake/3.6.3155560/bin/cmake
+arguments : 
+-H/Users/yangyu/AndroidProject/PalmRead/app
+-B/Users/yangyu/AndroidProject/PalmRead/app/.externalNativeBuild/cmake/debug/x86
+-GAndroid Gradle - Ninja
+-DANDROID_ABI=x86
+-DANDROID_NDK=/Users/yangyu/Library/Android/sdk/ndk-bundle
+-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=/Users/yangyu/AndroidProject/PalmRead/app/build/intermediates/cmake/debug/obj/x86
+-DCMAKE_BUILD_TYPE=Debug
+-DCMAKE_MAKE_PROGRAM=/Users/yangyu/Library/Android/sdk/cmake/3.6.3155560/bin/ninja
+-DCMAKE_TOOLCHAIN_FILE=/Users/yangyu/Library/Android/sdk/ndk-bundle/build/cmake/android.toolchain.cmake
+-DANDROID_NATIVE_API_LEVEL=19
+jvmArgs : 
+

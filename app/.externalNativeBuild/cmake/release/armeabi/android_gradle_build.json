@@ -1,0 +1,38 @@
+
+{
+	"buildFiles" : [ "/Users/yangyu/AndroidProject/PalmRead/app/CMakeLists.txt" ],
+	"cFileExtensions" : [ "c" ],
+	"cleanCommands" : 
+	[
+		"/Users/yangyu/Library/Android/sdk/cmake/3.6.3155560/bin/cmake --build /Users/yangyu/AndroidProject/PalmRead/app/.externalNativeBuild/cmake/release/armeabi --target clean"
+	],
+	"libraries" : 
+	{
+		"palmread-lib-Release-armeabi" : 
+		{
+			"abi" : "armeabi",
+			"artifactName" : "palmread-lib",
+			"buildCommand" : "/Users/yangyu/Library/Android/sdk/cmake/3.6.3155560/bin/cmake --build /Users/yangyu/AndroidProject/PalmRead/app/.externalNativeBuild/cmake/release/armeabi --target palmread-lib",
+			"buildType" : "release",
+			"files" : 
+			[
+				
+				{
+					"flags" : "  --target=armv5te-none-linux-androideabi --gcc-toolchain=/Users/yangyu/Library/Android/sdk/ndk-bundle/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64 --sysroot=/Users/yangyu/Library/Android/sdk/ndk-bundle/sysroot -Dpalmread_lib_EXPORTS  -isystem /Users/yangyu/Library/Android/sdk/ndk-bundle/sysroot/usr/include/arm-linux-androideabi -D__ANDROID_API__=19 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -march=armv5te -mtune=xscale -msoft-float -fno-integrated-as -mthumb -Wa,--noexecstack -Wformat -Werror=format-security  -Os -DNDEBUG  -fPIC      -c ",
+					"src" : "/Users/yangyu/AndroidProject/PalmRead/app/src/main/cpp/palmread-lib.c",
+					"workingDirectory" : "/Users/yangyu/AndroidProject/PalmRead/app/.externalNativeBuild/cmake/release/armeabi"
+				}
+			],
+			"output" : "/Users/yangyu/AndroidProject/PalmRead/app/build/intermediates/cmake/release/obj/armeabi/libpalmread-lib.so",
+			"toolchain" : "618456133490305594"
+		}
+	},
+	"toolchains" : 
+	{
+		"618456133490305594" : 
+		{
+			"cCompilerExecutable" : "/Users/yangyu/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang",
+			"cppCompilerExecutable" : "/Users/yangyu/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++"
+		}
+	}
+}

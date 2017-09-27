@@ -1,0 +1,17 @@
+# ninja log v5
+1	331	0	CMakeFiles/palmread-lib.dir/src/main/cpp/palmread-lib.c.o	104be3b5d10f7228
+332	396	0	../../../../build/intermediates/cmake/debug/obj/x86/libpalmread-lib.so	d3928e13698be2d8
+0	457	0	CMakeFiles/palmread-lib.dir/src/main/cpp/palmread-lib.c.o	104be3b5d10f7228
+457	554	0	../../../../build/intermediates/cmake/debug/obj/x86/libpalmread-lib.so	d3928e13698be2d8
+0	408	0	CMakeFiles/palmread-lib.dir/src/main/cpp/palmread-lib.c.o	104be3b5d10f7228
+409	483	0	../../../../build/intermediates/cmake/debug/obj/x86/libpalmread-lib.so	d3928e13698be2d8
+1	345	0	CMakeFiles/palmread-lib.dir/src/main/cpp/palmread-lib.c.o	104be3b5d10f7228
+346	408	0	../../../../build/intermediates/cmake/debug/obj/x86/libpalmread-lib.so	d3928e13698be2d8
+0	919	0	CMakeFiles/palmread-lib.dir/src/main/cpp/palmread-lib.c.o	104be3b5d10f7228
+919	1013	0	../../../../build/intermediates/cmake/debug/obj/x86/libpalmread-lib.so	d3928e13698be2d8
+1	401	0	CMakeFiles/palmread-lib.dir/src/main/cpp/palmread-lib.c.o	104be3b5d10f7228
+401	471	0	../../../../build/intermediates/cmake/debug/obj/x86/libpalmread-lib.so	d3928e13698be2d8
+0	444	0	CMakeFiles/palmread-lib.dir/src/main/cpp/palmread-lib.c.o	104be3b5d10f7228
+444	509	0	../../../../build/intermediates/cmake/debug/obj/x86/libpalmread-lib.so	d3928e13698be2d8
+0	446	0	CMakeFiles/palmread-lib.dir/src/main/cpp/palmread-lib.c.o	104be3b5d10f7228
+446	515	0	../../../../build/intermediates/cmake/debug/obj/x86/libpalmread-lib.so	d3928e13698be2d8
